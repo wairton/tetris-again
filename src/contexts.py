@@ -26,7 +26,9 @@ class IntroContext(Context):
         self.drawer.fill(cl.WHITE2)
         #soundObj = pygame.mixer.Sound('thundar.wav')
         #soundObj.play()
-        self.drawer.blit(logo,(20,config.SCREEN_RESOUTION[1]/3))
+        x,y = config.SCREEN_RESOUTION
+        logo_width = logo.get_width()
+        self.drawer.blit(logo,((x-logo_width)/2,y/3))
         self.drawer.display()
         time.sleep(2)
         self.drawer.fill(cl.BLACK)

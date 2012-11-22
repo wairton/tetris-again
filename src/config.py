@@ -8,7 +8,7 @@ IMG_LOGO = os.path.join(IMG_PATH, 'logo.png')
 IMG_BUTTON = os.path.join(IMG_PATH, 'menu.png')
 IMG_BUTTON_SEL = os.path.join(IMG_PATH, 'menu_selected.png')
 
-SCREEN_RESOUTION = (370, 600)
+SCREEN_RESOUTION = (470, 600)
 
 #grid settings
 GRID_POSITION = (20, 20)
