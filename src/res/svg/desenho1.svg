@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="desenho1.svg">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3787">
+      <stop
+         style="stop-color:#36c400;stop-opacity:1;"
+         offset="0"
+         id="stop3789" />
+      <stop
+         style="stop-color:#63c400;stop-opacity:0;"
+         offset="1"
+         id="stop3791" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3769">
+      <stop
+         style="stop-color:#21d624;stop-opacity:1;"
+         offset="0"
+         id="stop3771" />
+      <stop
+         id="stop3795"
+         offset="0.5"
+         style="stop-color:#42cd12;stop-opacity:0.49803922;" />
+      <stop
+         style="stop-color:#63c400;stop-opacity:0;"
+         offset="1"
+         id="stop3773" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.631608"
+     inkscape:cx="-20.958726"
+     inkscape:cy="862.33309"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="946"
+     inkscape:window-height="617"
+     inkscape:window-x="428"
+     inkscape:window-y="42"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Camada 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-size:94.4173584px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="187.44336"
+       y="281.67169"
+       id="text2985"
+       sodipodi:linespacing="125%"
+       transform="scale(0.93127332,1.0737986)"><tspan
+         sodipodi:role="line"
+         id="tspan2987"
+         x="187.44336"
+         y="281.67169"><tspan
+           style="fill:#ff2a2a"
+           id="tspan3839">T</tspan><tspan
+           style="fill:#008000"
+           id="tspan3841">E</tspan><tspan
+           style="fill:#ffd42a"
+           id="tspan3843">T</tspan><tspan
+           style="fill:#0000ff"
+           id="tspan3845">R</tspan><tspan
+           style="fill:#ff6600"
+           id="tspan3847">I</tspan><tspan
+           style="fill:#ff00ff"
+           id="tspan3849">S</tspan></tspan><tspan
+         sodipodi:role="line"
+         x="187.44336"
+         y="399.69336"
+         id="tspan2989" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="272.14285"
+       y="340.21936"
+       id="text3861"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3863"
+         x="272.14285"
+         y="340.21936"
+         style="fill:#666666">AGAIN</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3865"
+       style="fill:#808080;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Sans;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion3867"><rect
+           id="rect3869"
+           width="205"
+           height="56.42857"
+           x="159.28572"
+           y="311.64789"
+           style="fill:#808080" /></flowRegion><flowPara
+         id="flowPara3871" /></flowRoot>    <rect
+       style="fill:#d40000;stroke:#000000;stroke-width:4;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3873"
+       width="285.71426"
+       height="115.71445"
+       x="154.28572"
+       y="443.79077"
+       ry="27.142857"
+       inkscape:export-xdpi="93.193832"
+       inkscape:export-ydpi="93.193832"
+       inkscape:export-filename="/home/wairton/python/pygame/book/tetris/img/menu.png" />
+    <rect
+       ry="27.142857"
+       y="442.36218"
+       x="484.28571"
+       height="115.71445"
+       width="285.71426"
+       id="rect3875"
+       style="fill:#ff8080;stroke:#000000;stroke-width:4;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       inkscape:export-xdpi="93.193832"
+       inkscape:export-ydpi="93.193832" />
+    <rect
+       inkscape:export-filename="/home/wairton/python/pygame/book/tetris/img/menu.png"
+       inkscape:export-ydpi="93.193832"
+       inkscape:export-xdpi="93.193832"
+       ry="16.90402"
+       y="97.115768"
+       x="-71.960869"
+       height="72.064606"
+       width="247.06461"
+       id="rect2999"
+       style="fill:#669352;fill-opacity:1;stroke:#000000;stroke-width:2.93539476;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <rect
+       style="fill:#75bb63;fill-opacity:1;stroke:#000000;stroke-width:2.93539475999999988;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3957"
+       width="247.06461"
+       height="72.064606"
+       x="213.52036"
+       y="93.757164"
+       ry="16.90402"
+       inkscape:export-xdpi="93.193832"
+       inkscape:export-ydpi="93.193832"
+       inkscape:export-filename="/home/wairton/python/pygame/book/tetris/img/menu_selected.png" />
+    <rect
+       style="fill:#bed7be;fill-opacity:1;stroke:#000000;stroke-width:2.93539476;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3008"
+       width="247.06461"
+       height="72.064606"
+       x="-100.45956"
+       y="-35.878113"
+       ry="16.90402"
+       inkscape:export-xdpi="93.193832"
+       inkscape:export-ydpi="93.193832"
+       inkscape:export-filename="/home/wairton/projects/tetris_again/src/img/menu_.png" />
+    <rect
+       inkscape:export-filename="/home/wairton/python/pygame/book/tetris/img/menu_selected_.png"
+       inkscape:export-ydpi="93.193832"
+       inkscape:export-xdpi="93.193832"
+       ry="16.90402"
+       y="-43.986496"
+       x="181.85513"
+       height="72.064606"
+       width="247.06461"
+       id="rect3010"
+       style="fill:#bed750;fill-opacity:1;stroke:#000000;stroke-width:2.93539476;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  </g>
+</svg>
