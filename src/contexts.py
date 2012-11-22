@@ -23,7 +23,7 @@ class IntroContext(Context):
 
     def execute(self):
         logo = pygame.image.load(config.IMG_LOGO)
-        self.drawer.fill(cl.WHITE2)
+        self.drawer.fill(cl.BEATIFUL_BLUE)
         #soundObj = pygame.mixer.Sound('thundar.wav')
         #soundObj.play()
         x,y = config.SCREEN_RESOUTION
@@ -40,8 +40,8 @@ class MainMenuContext(Context):
     def __init__(self, drawer):
         super(MainMenuContext, self).__init__(drawer)
         self.selected_option = 0 
-        #self.options = ['play', 'versus', 'options', 'records', 'exit']
-        self.options = ['play', 'exit']
+        self.options = ['play', 'versus', 'options', 'records', 'exit']
+        #self.options = ['play', 'exit']
         
     def execute(self):
         self.button = pygame.image.load(config.IMG_BUTTON)
@@ -68,11 +68,12 @@ class MainMenuContext(Context):
         x_pad = (screen_w - button_w) / 2
         y_pad = screen_h - (button_h + 10) * len(self.options) 
         option_size = button_h + 5
-        self.drawer.fill(cl.WHITE2)
+        self.drawer.fill(cl.BEATIFUL_BLUE)
         font = pygame.font.Font(None, 50)
         for i, option in enumerate(self.options):
             y_pos = y_pad + option_size * i
-            text = font.render(option, 1, (20, 100, 20))
+            text = font.render(option, 1, (20, 20, 20))
+            #text = font.render(option, 1, (20, 100, 20))
             if i == self.selected_option:
                 self.drawer.blit(self.button_sel, (x_pad, y_pos))
             else:
