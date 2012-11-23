@@ -4,7 +4,7 @@ import os
 GAME_WINDOW_TITLE = "Tetris Again"
 GAME_FPS = 32
 IMG_PATH = os.path.join(os.getcwd(), 'img')
-IMG_LOGO = os.path.join(IMG_PATH, 'logo.png')
+IMG_LOGO = os.path.join(IMG_PATH, 'logo_.png')
 IMG_BUTTON = os.path.join(IMG_PATH, 'menu_.png')
 IMG_BUTTON_SEL = os.path.join(IMG_PATH, 'menu_selected.png')
 

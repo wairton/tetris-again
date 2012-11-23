@@ -25,8 +25,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8"
-     inkscape:cx="228.73167"
-     inkscape:cy="909.0815"
+     inkscape:cx="194.43302"
+     inkscape:cy="927.96358"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -440,5 +440,75 @@
          x="34.576973"
          id="tspan3127"
          sodipodi:role="line">J</tspan></text>
+    <text
+       inkscape:export-ydpi="400"
+       inkscape:export-xdpi="400"
+       inkscape:export-filename="/home/wairton/projects/tetris_again/src/img/logo_.png"
+       sodipodi:linespacing="125%"
+       id="text3050"
+       y="120.21933"
+       x="27.857149"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#1a1a1a;fill-opacity:1;stroke:none;font-family:UnBatang;-inkscape-font-specification:UnBatang"
+       xml:space="preserve"><tspan
+         y="120.21933"
+         x="27.857149"
+         id="tspan3052"
+         sodipodi:role="line">W</tspan></text>
+    <text
+       inkscape:export-ydpi="400"
+       inkscape:export-xdpi="400"
+       inkscape:export-filename="/home/wairton/projects/tetris_again/src/img/logo_.png"
+       sodipodi:linespacing="125%"
+       id="text3054"
+       y="120.21933"
+       x="50.357155"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#1a1a1a;fill-opacity:1;stroke:none;font-family:UnBatang;-inkscape-font-specification:UnBatang"
+       xml:space="preserve"><tspan
+         y="120.21933"
+         x="50.357155"
+         id="tspan3056"
+         sodipodi:role="line">A</tspan></text>
+    <text
+       inkscape:export-ydpi="400"
+       inkscape:export-xdpi="400"
+       inkscape:export-filename="/home/wairton/projects/tetris_again/src/img/logo_.png"
+       sodipodi:linespacing="125%"
+       id="text3058"
+       y="120.21933"
+       x="65.714256"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#1a1a1a;fill-opacity:1;stroke:none;font-family:UnBatang;-inkscape-font-specification:UnBatang"
+       xml:space="preserve"><tspan
+         y="120.21933"
+         x="65.714256"
+         id="tspan3060"
+         sodipodi:role="line">R</tspan></text>
+    <text
+       inkscape:export-ydpi="400"
+       inkscape:export-xdpi="400"
+       inkscape:export-filename="/home/wairton/projects/tetris_again/src/img/logo_.png"
+       sodipodi:linespacing="125%"
+       id="text3062"
+       y="119.50502"
+       x="87.142876"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#1a1a1a;fill-opacity:1;stroke:none;font-family:UnBatang;-inkscape-font-specification:UnBatang"
+       xml:space="preserve"><tspan
+         y="119.50502"
+         x="87.142876"
+         id="tspan3064"
+         sodipodi:role="line">J</tspan></text>
+    <text
+       inkscape:export-ydpi="400"
+       inkscape:export-xdpi="400"
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:1;stroke:none;font-family:Sans"
+       x="34.642868"
+       y="134.68362"
+       id="text3066"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/wairton/projects/tetris_again/src/img/logo_.png"><tspan
+         sodipodi:role="line"
+         id="tspan3068"
+         x="34.642868"
+         y="134.68362">gamedev</tspan></text>
   </g>
 </svg>

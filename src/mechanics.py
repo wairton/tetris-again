@@ -5,9 +5,9 @@ import color
 import shapes
 
 piece_colors = [color.BLACK, color.RED, color.ORANGE, color.YELLOW, color.GREEN, 
-                color.BLUE, color.INDIGO, color.VIOLET]
-border_colors = [color.GRAY, color.DARK_RED, color.DARK_ORANGE, color.DARK_YELLOW, 
-                color.DARK_GREEN, color.DARK_BLUE, color.DARK_INDIGO, color.DARK_VIOLET]
+                color.BLUE, color.INDIGO, color.LIGHT_BLUE]
+border_colors = [(200,200,200), color.DARK_RED, color.DARK_ORANGE, color.DARK_YELLOW, 
+                color.DARK_GREEN, color.DARK_BLUE, color.DARK_INDIGO, color.DARK_LIGHT_BLUE]
 
 class Piece(object):
     def __init__(self, shape, color, position, initial_state):
