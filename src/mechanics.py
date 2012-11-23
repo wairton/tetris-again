@@ -61,6 +61,7 @@ class Block(object):
 class Grid(object):
     def __init__(self, ncolumns, nlines, draw, valid_colors):
         self.active_pieces = []
+        #historical bug! don't remove this commented line by now...
         #self.structure = [[0] * ncolumns] * nlines
         self.structure = [[0 for _ in range(ncolumns)] for _ in range(nlines)]
         self.ncolumns = ncolumns
@@ -87,14 +88,12 @@ class Grid(object):
         block.draw(self.drawer, position)
         
     def add_piece(self, piece):
-        #print piece
         self.active_pieces.append(piece)
 
     def pop_piece(self):
         self.active_pieces.pop(0)
 
     def _shape_to_positions(self, shape, base_position):
-        #print base_position, shape
         x, y = base_position 
         shape_pos = zip([(l+y,c+x) for l in range(4) for c in range(4)], shape)
         return map(lambda a:a[0],filter(lambda a:a[1] == 1, shape_pos))
@@ -108,16 +107,15 @@ class Grid(object):
                 continue
             self.structure[linha][coluna] = value
     
-    def can_piece_rotate(self, piece):
+    def try_piece_rotate(self, piece):
         rotated_shape = piece.next_rotate()
-        #print '@', rotated_shape
         rotated_positions = self._shape_to_positions(rotated_shape, piece.position)
         if self.verify_collision(rotated_positions):
             return None
         return rotated_positions
         
         
-    def can_piece_down(self, positions):
+    def try_piece_down(self, positions):
         """
         if True, returns the next positions, otherwise returns None
         """
@@ -128,7 +126,7 @@ class Grid(object):
             return None
         return next
     
-    def can_piece_right(self, positions):
+    def try_piece_right(self, positions):
         """
         if True, returns the next positions, otherwise returns None
         """
@@ -139,7 +137,7 @@ class Grid(object):
             return None
         return next
     
-    def can_piece_left(self, positions):
+    def try_piece_left(self, positions):
         """
         if True, returns the next positions, otherwise returns None
         """
@@ -166,7 +164,7 @@ class Grid(object):
         for i,piece in enumerate(self.active_pieces):
             blocks = self.get_piece_positions(piece)
             self.fill_piece_positions(blocks, 0)
-            next = self.can_piece_down(blocks)
+            next = self.try_piece_down(blocks)
             if next == None:
                 self.fill_piece_positions(blocks, piece.color)
                 self.pop_piece()
@@ -184,8 +182,7 @@ class Grid(object):
         for i,piece in enumerate(self.active_pieces):
             blocks = self.get_piece_positions(piece)
             self.fill_piece_positions(blocks, 0)
-            next = self.can_piece_rotate(piece)
-            #print '@', blocks, next
+            next = self.try_piece_rotate(piece)
             if next == None:
                 self.fill_piece_positions(blocks, piece.color)
             else:
@@ -197,7 +194,7 @@ class Grid(object):
         for i,piece in enumerate(self.active_pieces):
             blocks = self.get_piece_positions(piece)
             self.fill_piece_positions(blocks, 0)
-            next = self.can_piece_left(blocks)
+            next = self.try_piece_left(blocks)
             if next == None:
                 self.fill_piece_positions(blocks, piece.color)
             else:
@@ -210,7 +207,7 @@ class Grid(object):
         for i,piece in enumerate(self.active_pieces):
             blocks = self.get_piece_positions(piece)
             self.fill_piece_positions(blocks, 0)
-            next = self.can_piece_right(blocks)
+            next = self.try_piece_right(blocks)
             if next == None:
                 self.fill_piece_positions(blocks, piece.color)
             else:
@@ -255,13 +252,12 @@ class PiecePreview(object):
     def draw_block(self, color, position):
         block = Block(piece_colors[color], border_colors[color])
         block.draw(self.drawer, position)
-        
-        
+
+
 class GameScreen(object):
     def __init__(self, drawer, grid_position):
         self.grid = Grid(config.GRID_WIDTH, config.GRID_HEIGHT, drawer, piece_colors)
         self.preview = PiecePreview((350, 100), 3, drawer)
-        #self.grid.filled(0)
         drawer.fill((121,159,190))
         self.grid.draw(grid_position)
         self.grid_position = grid_position
@@ -271,7 +267,7 @@ class GameScreen(object):
         drawer.display()
         self.drawer = drawer
         #TODO: remove the hard-coded value in the next line!
-        self.next_pieces = [self.generate_piece() for i in range(6)]
+        self.next_pieces = [self.generate_piece() for _ in range(6)]
         self.grid.add_piece(self.next_pieces.pop(0))
         self.preview.draw(self.next_pieces)
         
@@ -294,7 +290,6 @@ class GameScreen(object):
         else:    
             colide, morreu = self.grid.step()
         self.grid.draw(self.grid_position)
-        #time.sleep(0.1)
         if morreu:
             return True
         if colide:
