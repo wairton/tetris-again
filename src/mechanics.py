@@ -87,14 +87,14 @@ class Grid(object):
         block.draw(self.drawer, position)
         
     def add_piece(self, piece):
-        print piece
+        #print piece
         self.active_pieces.append(piece)
 
     def pop_piece(self):
         self.active_pieces.pop(0)
 
     def _shape_to_positions(self, shape, base_position):
-        print base_position, shape
+        #print base_position, shape
         x, y = base_position 
         shape_pos = zip([(l+y,c+x) for l in range(4) for c in range(4)], shape)
         return map(lambda a:a[0],filter(lambda a:a[1] == 1, shape_pos))
@@ -110,7 +110,7 @@ class Grid(object):
     
     def can_piece_rotate(self, piece):
         rotated_shape = piece.next_rotate()
-        print '@', rotated_shape
+        #print '@', rotated_shape
         rotated_positions = self._shape_to_positions(rotated_shape, piece.position)
         if self.verify_collision(rotated_positions):
             return None
@@ -185,7 +185,7 @@ class Grid(object):
             blocks = self.get_piece_positions(piece)
             self.fill_piece_positions(blocks, 0)
             next = self.can_piece_rotate(piece)
-            print '@', blocks, next
+            #print '@', blocks, next
             if next == None:
                 self.fill_piece_positions(blocks, piece.color)
             else:
@@ -238,13 +238,19 @@ class GameScreen(object):
         drawer.fill((121,159,190))
         self.grid.draw(grid_position)
         self.grid_position = grid_position
+        #we human don't like real random...
+        self.color_choices = range(1,len(piece_colors))
+        random.shuffle(self.color_choices)
         drawer.display()
         self.drawer = drawer
         self.grid.add_piece(self.generate_piece())
         
     def generate_piece(self):
+        if len(self.color_choices) == 0:
+            self.color_choices = range(1,len(piece_colors))
+            random.shuffle(self.color_choices)
         new_shape = random.choice(shapes.ALL_SHAPES)
-        new_color = random.randint(1,len(piece_colors)-1)
+        new_color = self.color_choices.pop()
         initial_position = random.randint(0,len(new_shape)-1)
         return Piece(new_shape, new_color, (3,-4), initial_position)
         
