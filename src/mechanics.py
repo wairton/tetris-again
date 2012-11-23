@@ -17,7 +17,7 @@ class Piece(object):
         self.position = position
 
     def __str__(self):
-        return 'Shape: ' + str(self.shape[self.state]) + str(self.color)
+        return 'Shape: ' + str(self._shape[self.state]) + ' ' + str(self.color)
     
     @property
     def shape(self):
@@ -230,10 +230,37 @@ class Grid(object):
             if not 0 in line:
                 lines.append(i)
         return lines
+    
+class PiecePreview(object):
+    def __init__(self, position, num_pieces, drawer):
+        self.position = position
+        self.num_pieces = num_pieces
+        self.drawer = drawer
+        
+    def draw(self, pieces):
+        ini_x, ini_y = self.position
+        block_size = config.BLOCK_SIZE
+        block_size_and_pad = block_size + config.BLOCK_PAD
+        bsap = block_size_and_pad
+        for piece in pieces[:self.num_pieces]:
+            shape_pos = zip([(l,c) for l in range(4) for c in range(4)], piece.shape)
+            for pos, block in shape_pos:
+                x, y = pos
+                color = 0
+                if block:
+                    color = piece.color
+                self.draw_block(color, (ini_x+x*bsap, ini_y+y*bsap))
+            ini_y += 100                
+
+    def draw_block(self, color, position):
+        block = Block(piece_colors[color], border_colors[color])
+        block.draw(self.drawer, position)
+        
         
 class GameScreen(object):
     def __init__(self, drawer, grid_position):
         self.grid = Grid(config.GRID_WIDTH, config.GRID_HEIGHT, drawer, piece_colors)
+        self.preview = PiecePreview((350, 100), 3, drawer)
         #self.grid.filled(0)
         drawer.fill((121,159,190))
         self.grid.draw(grid_position)
@@ -243,7 +270,10 @@ class GameScreen(object):
         random.shuffle(self.color_choices)
         drawer.display()
         self.drawer = drawer
-        self.grid.add_piece(self.generate_piece())
+        #TODO: remove the hard-coded value in the next line!
+        self.next_pieces = [self.generate_piece() for i in range(6)]
+        self.grid.add_piece(self.next_pieces.pop(0))
+        self.preview.draw(self.next_pieces)
         
     def generate_piece(self):
         if len(self.color_choices) == 0:
@@ -271,5 +301,7 @@ class GameScreen(object):
             lines = self.grid.check_complete_lines()
             if len(lines) > 0:
                 self.grid.remove_lines(lines)
-            self.grid.add_piece(self.generate_piece())
+            self.grid.add_piece(self.next_pieces.pop(0))
+            self.next_pieces.append(self.generate_piece())
+            self.preview.draw(self.next_pieces)
         return False
