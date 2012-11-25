@@ -182,7 +182,13 @@ class Grid(object):
                 px, py = self.active_pieces[i].position
                 self.active_pieces[i].position = px, py+1
                 return False, False
-    
+
+    def ground(self):
+        colidiu, morreu = self.step()
+        while colidiu != True:
+            colidiu, morreu = self.step()
+        return colidiu, morreu
+        
     def rotate(self):
         for i,piece in enumerate(self.active_pieces):
             blocks = self.get_piece_positions(piece)
@@ -320,6 +326,8 @@ class GameScreen(object):
             colide, morreu = self.grid.right()
         elif action == 'rotate':
             colide, morreu = self.grid.rotate()
+        elif action == 'ground':
+            colide, morreu = self.grid.ground()
         else:    
             colide, morreu = self.grid.step()
         self.grid.draw(self.grid_position)
