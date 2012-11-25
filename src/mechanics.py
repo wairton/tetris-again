@@ -1,8 +1,13 @@
 import random
 
+import pygame
+
 import config
 import color
 import shapes
+
+#TODO: normalize initialization parameters order
+#TODO: this module should not depends on pygame!
 
 piece_colors = [color.BLACK, color.RED, color.ORANGE, color.YELLOW, color.GREEN, 
                 color.BLUE, color.INDIGO, color.LIGHT_BLUE]
@@ -227,7 +232,8 @@ class Grid(object):
             if not 0 in line:
                 lines.append(i)
         return lines
-    
+
+
 class PiecePreview(object):
     def __init__(self, position, num_pieces, drawer):
         self.position = position
@@ -254,11 +260,36 @@ class PiecePreview(object):
         block.draw(self.drawer, position)
 
 
+class Score (object):
+    def __init__(self, drawer, grid_position, show_score=True, show_lines=True):
+        self.position = grid_position
+        self.line_score = config.LINE_VALUE #default value
+        self.score = 0
+        self.lines = 0
+        self.show_score = show_score
+        self.show_lines = show_lines
+        self.font = pygame.font.Font(None, 30) #TODO: remove this hard coded value!
+        self.drawer = drawer
+
+    def update(self, num_lines=0):
+        self.lines += num_lines
+        if num_lines > 0:
+            self.score += self.line_score[num_lines-1]
+        self.draw()
+
+    def draw(self):
+        x, y = self.position
+        self.drawer.rect(color.BLACK, (x, y, 150, 100))
+        text = self.font.render("lines: %s" % self.lines, 1, color.WHITE2)
+        self.drawer.blit(text, (x,y))
+        text = self.font.render("score: %s" % self.score, 1, color.WHITE2)
+        self.drawer.blit(text, (x,y+50))
+
 class GameScreen(object):
     def __init__(self, drawer, grid_position):
         self.grid = Grid(config.GRID_WIDTH, config.GRID_HEIGHT, drawer, piece_colors)
         self.preview = PiecePreview((350, 100), 3, drawer)
-        drawer.fill((121,159,190))
+        drawer.fill(color.BEATIFUL_BLUE)
         self.grid.draw(grid_position)
         self.grid_position = grid_position
         #we human don't like real random...
@@ -270,6 +301,8 @@ class GameScreen(object):
         self.next_pieces = [self.generate_piece() for _ in range(6)]
         self.grid.add_piece(self.next_pieces.pop(0))
         self.preview.draw(self.next_pieces)
+        self.score = Score(self.drawer,(300, 450))
+        self.score.update()
         
     def generate_piece(self):
         if len(self.color_choices) == 0:
@@ -296,6 +329,7 @@ class GameScreen(object):
             lines = self.grid.check_complete_lines()
             if len(lines) > 0:
                 self.grid.remove_lines(lines)
+                self.score.update(len(lines))
             self.grid.add_piece(self.next_pieces.pop(0))
             self.next_pieces.append(self.generate_piece())
             self.preview.draw(self.next_pieces)
