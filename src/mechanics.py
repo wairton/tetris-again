@@ -119,7 +119,6 @@ class Grid(object):
             return None
         return rotated_positions
         
-        
     def try_piece_down(self, positions):
         """
         if True, returns the next positions, otherwise returns None

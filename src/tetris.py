@@ -24,6 +24,8 @@ class Game(object):
                 sys.exit()
             elif option == 'play':
                 PlayContext(self.draw).execute()
+            elif option == 'records':
+                RecordContext(self.draw).execute()
             else:
                 print option, 'unknown' 
 

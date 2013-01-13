@@ -34,7 +34,7 @@ class IntroContext(Context):
         self.drawer.fill(cl.BLACK)
         self.drawer.display()
         return 0
-  
+
 
 class MainMenuContext(Context):
     def __init__(self, drawer):
@@ -104,14 +104,16 @@ class PlayContext(Context):
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
                         return 'foo'
-                    if event.key == K_UP:
+                    elif event.key == K_UP:
                         game_screen.loop('rotate')
-                    if event.key == K_DOWN:
+                    elif event.key == K_DOWN:
                         mod = 2
-                    if event.key == K_LEFT:
+                    elif event.key == K_LEFT:
                         game_screen.loop('left')
-                    if event.key == K_RIGHT:
-                        game_screen.loop('right')                        
+                    elif event.key == K_RIGHT:
+                        game_screen.loop('right')
+                    elif event.key == K_SPACE:
+                        game_screen.loop('ground')
                 if event.type == KEYUP:                        
                     if event.key == K_DOWN:
                         mod = 8  
@@ -122,3 +124,34 @@ class PlayContext(Context):
             if morreu:
                 return 'foo'
             fpsClock.tick(FPS)
+
+
+class RecordContext(Context):
+    def __init__(self, drawer):
+        super(RecordContext, self).__init__(drawer)
+
+    def execute(self):
+      try:
+        records = map(int, open(config.RECORD_FILE).readlines())
+      except Exception as e:
+          print "TODO =)", e
+      print records
+      self.drawer.fill(cl.BEATIFUL_BLUE)
+      screen_w, screen_h = config.SCREEN_RESOUTION
+      FPS = 32 # frames per second setting
+      font = pygame.font.Font(None, 40)
+      while True:
+          fpsClock = pygame.time.Clock()
+          for event in pygame.event.get():
+              if event.type == QUIT:
+                  pygame.quit()
+                  sys.exit()
+              if event.type == KEYDOWN:
+                 return 'foo'
+          for i in range(len(records)):
+            text = font.render("%d. %d" % (i+1, records[i]), 1, (20, 20, 20))
+            text_x_pos = (screen_w - text.get_width()) / 2
+            self.drawer.blit(text, (text_x_pos, (text.get_height() + 2) * i + 50))
+          fpsClock.tick(FPS)
+          self.drawer.display()
+      
