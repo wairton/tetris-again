@@ -5,7 +5,6 @@ from config import IMG_PATH
 IMG_LOGO = os.path.join(IMG_PATH, 'logo_.png')
 IMG_BUTTON = os.path.join(IMG_PATH, 'menu_.png')
 IMG_BUTTON_SEL = os.path.join(IMG_PATH, 'menu_selected_2.png')
-RECORD_FILE = os.path.join(GAME_PATH, 'records.conf')
 
 #Block files
 BLACK_BLOCK = os.path.join(IMG_PATH, 'block_black.png')

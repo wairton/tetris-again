@@ -4,6 +4,7 @@ import pygame
 
 import config
 import color
+import resource
 import shapes
 
 #TODO: normalize initialization parameters order
@@ -13,6 +14,13 @@ piece_colors = [color.BLACK, color.RED, color.ORANGE, color.YELLOW, color.GREEN,
                 color.BLUE, color.INDIGO, color.LIGHT_BLUE]
 border_colors = [(200,200,200), color.DARK_RED, color.DARK_ORANGE, color.DARK_YELLOW, 
                 color.DARK_GREEN, color.DARK_BLUE, color.DARK_INDIGO, color.DARK_LIGHT_BLUE]
+                
+blocks_path = [resource.BLACK_BLOCK, resource.BLUE_BLOCK, resource.GREEN_BLOCK,
+            resource.INDIGO_BLOCK, resource.LIGHT_BLUE_BLOCK, resource.ORANGE_BLOCK,
+            resource.RED_BLOCK, resource.YELLOW_BLOCK]
+
+blocks_img = [pygame.image.load(block) for block in blocks_path]
+
 
 class Piece(object):
     def __init__(self, shape, color, position, initial_state):
@@ -47,20 +55,11 @@ class Piece(object):
 
 
 class Block(object):
-    def __init__(self, color, border_color):
-        self.color = color
-        self.border_color = border_color
+    def __init__(self, img_index):
+        self.img_index = img_index
 
     def draw(self, drawer, position):
-        block_size = config.BLOCK_SIZE
-        x, y = position
-        rect = x, y, block_size, block_size
-        drawer.rect(self.color, rect)
-        drawer.line(self.border_color, (x,y),(x, y + block_size), 2)
-        drawer.line(self.border_color, (x + block_size,y), 
-                    (x + block_size, y + block_size), 2)
-        drawer.line(self.border_color, (x,y),(x + block_size, y), 2)
-        drawer.line(self.border_color, (x,y + block_size),(x + block_size, y + block_size), 2)
+        drawer.blit(blocks_img[self.img_index], position)
 
 
 class Grid(object):
@@ -89,7 +88,7 @@ class Grid(object):
                                             ini_y + i * block_size_and_pad))
 
     def draw_block(self, color, position):
-        block = Block(piece_colors[color], border_colors[color])
+        block = Block(color)
         block.draw(self.drawer, position)
         
     def add_piece(self, piece):
@@ -261,7 +260,7 @@ class PiecePreview(object):
             ini_y += 100                
 
     def draw_block(self, color, position):
-        block = Block(piece_colors[color], border_colors[color])
+        block = Block(color)
         block.draw(self.drawer, position)
 
 
