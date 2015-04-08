@@ -1,12 +1,12 @@
 import os
 from config import IMG_PATH
 
-#menu
+# menu
 IMG_LOGO = os.path.join(IMG_PATH, 'logo_.png')
 IMG_BUTTON = os.path.join(IMG_PATH, 'menu_.png')
 IMG_BUTTON_SEL = os.path.join(IMG_PATH, 'menu_selected_2.png')
 
-#Block files
+# Block files
 BLACK_BLOCK = os.path.join(IMG_PATH, 'block_black.png')
 BLUE_BLOCK = os.path.join(IMG_PATH, 'block_blue.png')
 GREEN_BLOCK = os.path.join(IMG_PATH, 'block_green.png')

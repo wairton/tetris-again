@@ -7,14 +7,14 @@ import color
 import resource
 import shapes
 
-#TODO: normalize initialization parameters order
-#TODO: this module should not depends on pygame!
+# TODO: normalize initialization parameters order
+# TODO: this module should not depends on pygame!
 
-piece_colors = [color.BLACK, color.RED, color.ORANGE, color.YELLOW, color.GREEN, 
+piece_colors = [color.BLACK, color.RED, color.ORANGE, color.YELLOW, color.GREEN,
                 color.BLUE, color.INDIGO, color.LIGHT_BLUE]
-border_colors = [(200,200,200), color.DARK_RED, color.DARK_ORANGE, color.DARK_YELLOW, 
+border_colors = [(200, 200, 200), color.DARK_RED, color.DARK_ORANGE, color.DARK_YELLOW,
                 color.DARK_GREEN, color.DARK_BLUE, color.DARK_INDIGO, color.DARK_LIGHT_BLUE]
-                
+
 blocks_path = [resource.BLACK_BLOCK, resource.BLUE_BLOCK, resource.GREEN_BLOCK,
             resource.INDIGO_BLOCK, resource.LIGHT_BLUE_BLOCK, resource.ORANGE_BLOCK,
             resource.RED_BLOCK, resource.YELLOW_BLOCK]
@@ -31,19 +31,19 @@ class Piece(object):
 
     def __str__(self):
         return 'Shape: ' + str(self._shape[self.state]) + ' ' + str(self.color)
-    
+
     @property
     def shape(self):
         return self._shape[self.state]
-    
+
     def next_rotate(self, clockwise=True):
         """
         return the shape of a next rotation
         """
         if clockwise:
-            return self._shape[self.state - 1]    
+            return self._shape[self.state - 1]
         return self._shape[(self.state + 1) % len(self._shape)]
-    
+
     def rotate(self, clockwise=True):
         if clockwise:
             if self.state > 0:
@@ -65,8 +65,8 @@ class Block(object):
 class Grid(object):
     def __init__(self, ncolumns, nlines, draw, valid_colors):
         self.active_pieces = []
-        #historical bug! don't remove this commented line by now...
-        #self.structure = [[0] * ncolumns] * nlines
+        # historical bug! don't remove this commented line by now...
+        # self.structure = [[0] * ncolumns] * nlines
         self.structure = [[0 for _ in range(ncolumns)] for _ in range(nlines)]
         self.ncolumns = ncolumns
         self.nlines = nlines
@@ -77,20 +77,20 @@ class Grid(object):
         for i, line in enumerate(self.structure):
             for j, col in enumerate(line):
                 self.structure[i][j] = color
-    
+
     def draw(self, position):
         ini_x, ini_y = position
         block_size = config.BLOCK_SIZE
         block_size_and_pad = block_size + config.BLOCK_PAD
         for i, line in enumerate(self.structure):
             for j, color in enumerate(line):
-                self.draw_block(color, (ini_x + j * block_size_and_pad, 
+                self.draw_block(color, (ini_x + j * block_size_and_pad,
                                             ini_y + i * block_size_and_pad))
 
     def draw_block(self, color, position):
         block = Block(color)
         block.draw(self.drawer, position)
-        
+
     def add_piece(self, piece):
         self.active_pieces.append(piece)
 
@@ -98,26 +98,26 @@ class Grid(object):
         self.active_pieces.pop(0)
 
     def _shape_to_positions(self, shape, base_position):
-        x, y = base_position 
+        x, y = base_position
         shape_pos = zip([(l+y,c+x) for l in range(4) for c in range(4)], shape)
-        return map(lambda a:a[0],filter(lambda a:a[1] == 1, shape_pos))
+        return map(lambda a:a[0], filter(lambda a:a[1] == 1, shape_pos))
 
     def get_piece_positions(self, piece):
         return self._shape_to_positions(piece.shape, piece.position)
-                        
+
     def fill_piece_positions(self, blocks, value):
         for linha, coluna in blocks:
             if linha < 0 or coluna < 0:
                 continue
             self.structure[linha][coluna] = value
-    
+
     def try_piece_rotate(self, piece):
         rotated_shape = piece.next_rotate()
         rotated_positions = self._shape_to_positions(rotated_shape, piece.position)
         if self.verify_collision(rotated_positions):
             return None
         return rotated_positions
-        
+
     def try_piece_down(self, positions):
         """
         if True, returns the next positions, otherwise returns None
@@ -128,7 +128,7 @@ class Grid(object):
         if self.verify_collision(next):
             return None
         return next
-    
+
     def try_piece_right(self, positions):
         """
         if True, returns the next positions, otherwise returns None
@@ -139,7 +139,7 @@ class Grid(object):
         if self.verify_collision(next):
             return None
         return next
-    
+
     def try_piece_left(self, positions):
         """
         if True, returns the next positions, otherwise returns None
@@ -150,25 +150,25 @@ class Grid(object):
         if self.verify_collision(next):
             return None
         return next
-    
+
     def verify_collision(self, positions):
         for line, column in positions:
             if line < 0 or line > self.nlines:
                 continue
-            if column >= self.ncolumns: #right
+            if column >= self.ncolumns:  # right
                 return True
-            if column < 0: #left
+            if column < 0:  # left
                 return True
             if line == self.nlines or self.structure[line][column] != 0:
                 return True
         return False
-                
+
     def step(self):
         for i,piece in enumerate(self.active_pieces):
             blocks = self.get_piece_positions(piece)
             self.fill_piece_positions(blocks, 0)
             next = self.try_piece_down(blocks)
-            if next == None:
+            if next is None:
                 self.fill_piece_positions(blocks, piece.color)
                 self.pop_piece()
                 for l,c in blocks:
@@ -186,13 +186,13 @@ class Grid(object):
         while colidiu != True:
             colidiu, morreu = self.step()
         return colidiu, morreu
-        
+
     def rotate(self):
         for i,piece in enumerate(self.active_pieces):
             blocks = self.get_piece_positions(piece)
             self.fill_piece_positions(blocks, 0)
             next = self.try_piece_rotate(piece)
-            if next == None:
+            if next is None:
                 self.fill_piece_positions(blocks, piece.color)
             else:
                 self.fill_piece_positions( next, piece.color)
@@ -204,32 +204,32 @@ class Grid(object):
             blocks = self.get_piece_positions(piece)
             self.fill_piece_positions(blocks, 0)
             next = self.try_piece_left(blocks)
-            if next == None:
+            if next is None:
                 self.fill_piece_positions(blocks, piece.color)
             else:
                 self.fill_piece_positions( next, piece.color)
                 px, py = self.active_pieces[i].position
                 self.active_pieces[i].position = px-1, py
             return False, False
-    
+
     def right(self):
         for i,piece in enumerate(self.active_pieces):
             blocks = self.get_piece_positions(piece)
             self.fill_piece_positions(blocks, 0)
             next = self.try_piece_right(blocks)
-            if next == None:
+            if next is None:
                 self.fill_piece_positions(blocks, piece.color)
             else:
                 self.fill_piece_positions( next, piece.color)
                 px, py = self.active_pieces[i].position
                 self.active_pieces[i].position = px+1, py
             return False, False
-    
+
     def remove_lines(self, lines):
         for i in lines:
             self.structure.pop(i)
             self.structure.insert(0,[0] * 10)
-    
+
     def check_complete_lines(self):
         lines = []
         for i,line in enumerate(self.structure):
@@ -243,7 +243,7 @@ class PiecePreview(object):
         self.position = position
         self.num_pieces = num_pieces
         self.drawer = drawer
-        
+
     def draw(self, pieces):
         ini_x, ini_y = self.position
         block_size = config.BLOCK_SIZE
@@ -257,7 +257,7 @@ class PiecePreview(object):
                 if block:
                     color = piece.color
                 self.draw_block(color, (ini_x+x*bsap, ini_y+y*bsap))
-            ini_y += 100                
+            ini_y += 100
 
     def draw_block(self, color, position):
         block = Block(color)
@@ -267,12 +267,12 @@ class PiecePreview(object):
 class Score (object):
     def __init__(self, drawer, grid_position, show_score=True, show_lines=True):
         self.position = grid_position
-        self.line_score = config.LINE_VALUE #default value
+        self.line_score = config.LINE_VALUE # default value
         self.score = 0
         self.lines = 0
         self.show_score = show_score
         self.show_lines = show_lines
-        self.font = pygame.font.Font(None, 30) #TODO: remove this hard coded value!
+        self.font = pygame.font.Font(None, 30) # TODO: remove this hard coded value!
         self.drawer = drawer
 
     def update(self, num_lines=0):
@@ -289,6 +289,7 @@ class Score (object):
         text = self.font.render("score: %s" % self.score, 1, color.WHITE2)
         self.drawer.blit(text, (x,y+50))
 
+
 class GameScreen(object):
     def __init__(self, drawer, grid_position):
         self.grid = Grid(config.GRID_WIDTH, config.GRID_HEIGHT, drawer, piece_colors)
@@ -296,27 +297,27 @@ class GameScreen(object):
         drawer.fill(color.BEATIFUL_BLUE)
         self.grid.draw(grid_position)
         self.grid_position = grid_position
-        #we human don't like real random...
-        self.color_choices = range(1,len(piece_colors))
+        # we humans don't like real randomness...
+        self.color_choices = range(1, len(piece_colors))
         random.shuffle(self.color_choices)
         drawer.display()
         self.drawer = drawer
-        #TODO: remove the hard-coded value in the next line!
+        # TODO: remove the hard-coded value in the next line!
         self.next_pieces = [self.generate_piece() for _ in range(6)]
         self.grid.add_piece(self.next_pieces.pop(0))
         self.preview.draw(self.next_pieces)
-        self.score = Score(self.drawer,(300, 450))
+        self.score = Score(self.drawer, (300, 450))
         self.score.update()
-        
+
     def generate_piece(self):
         if len(self.color_choices) == 0:
-            self.color_choices = range(1,len(piece_colors))
+            self.color_choices = range(1, len(piece_colors))
             random.shuffle(self.color_choices)
         new_shape = random.choice(shapes.ALL_SHAPES)
         new_color = self.color_choices.pop()
-        initial_position = random.randint(0,len(new_shape)-1)
-        return Piece(new_shape, new_color, (3,-4), initial_position)
-        
+        initial_position = random.randint(0, len(new_shape)-1)
+        return Piece(new_shape, new_color, (3, -4), initial_position)
+
     def loop(self, action=None):
         if action == 'left':
             colide, morreu = self.grid.left()
@@ -326,7 +327,7 @@ class GameScreen(object):
             colide, morreu = self.grid.rotate()
         elif action == 'ground':
             colide, morreu = self.grid.ground()
-        else:    
+        else:
             colide, morreu = self.grid.step()
         self.grid.draw(self.grid_position)
         if morreu:
