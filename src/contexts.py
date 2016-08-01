@@ -41,7 +41,6 @@ class MainMenuContext(Context):
         super(MainMenuContext, self).__init__(drawer)
         self.selected_option = 0
         self.options = ['play', 'versus', 'options', 'records', 'exit']
-        # self.options = ['play', 'exit']
 
     def execute(self):
         self.button = pygame.image.load(config.IMG_BUTTON)
@@ -73,7 +72,6 @@ class MainMenuContext(Context):
         for i, option in enumerate(self.options):
             y_pos = y_pad + option_size * i
             text = font.render(option, 1, (20, 20, 20))
-            #text = font.render(option, 1, (20, 100, 20))
             if i == self.selected_option:
                 self.drawer.blit(self.button_sel, (x_pad, y_pos))
             else:

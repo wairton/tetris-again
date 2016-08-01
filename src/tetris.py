@@ -6,7 +6,6 @@ from pygame.locals import *
 import config
 import color
 from draw import Draw
-from contexts import *
 
 
 class Game(object):
@@ -17,15 +16,16 @@ class Game(object):
         self.mainloop()
 
     def mainloop(self):
-        IntroContext(self.draw).execute()
+        import contexts as ctx
+        ctx.IntroContext(self.draw).execute()
         while True:
-            option = MainMenuContext(self.draw).execute()
+            option = ctx.MainMenuContext(self.draw).execute()
             if option == 'exit':
                 sys.exit()
             elif option == 'play':
-                PlayContext(self.draw).execute()
+                ctx.PlayContext(self.draw).execute()
             elif option == 'records':
-                RecordContext(self.draw).execute()
+                ctx.RecordContext(self.draw).execute()
             else:
                 print(option, 'unknown')
 

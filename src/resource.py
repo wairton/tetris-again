@@ -1,4 +1,7 @@
 import os
+
+import pygame
+
 from config import IMG_PATH
 
 # menu
@@ -15,3 +18,13 @@ LIGHT_BLUE_BLOCK = os.path.join(IMG_PATH, 'block_light_blue.png')
 ORANGE_BLOCK = os.path.join(IMG_PATH, 'block_orange.png')
 RED_BLOCK = os.path.join(IMG_PATH, 'block_red.png')
 YELLOW_BLOCK = os.path.join(IMG_PATH, 'block_yellow.png')
+
+BLOCKS_PATH = [
+                BLACK_BLOCK, BLUE_BLOCK, GREEN_BLOCK,
+                INDIGO_BLOCK, LIGHT_BLUE_BLOCK, ORANGE_BLOCK,
+                RED_BLOCK, YELLOW_BLOCK
+            ]
+
+BLOCKS_IMG = [pygame.image.load(block) for block in BLOCKS_PATH]
+
+GAME_FONT = pygame.font.Font(None, 30) # TODO: remove this hard coded value!

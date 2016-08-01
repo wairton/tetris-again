@@ -1,25 +1,16 @@
 import random
 
-import pygame
-
 import config
 import color
 import resource
 import shapes
 
 # TODO: normalize initialization parameters order
-# TODO: this module should not depends on pygame!
 
 piece_colors = [color.BLACK, color.RED, color.ORANGE, color.YELLOW, color.GREEN,
                 color.BLUE, color.INDIGO, color.LIGHT_BLUE]
 border_colors = [(200, 200, 200), color.DARK_RED, color.DARK_ORANGE, color.DARK_YELLOW,
                 color.DARK_GREEN, color.DARK_BLUE, color.DARK_INDIGO, color.DARK_LIGHT_BLUE]
-
-blocks_path = [resource.BLACK_BLOCK, resource.BLUE_BLOCK, resource.GREEN_BLOCK,
-            resource.INDIGO_BLOCK, resource.LIGHT_BLUE_BLOCK, resource.ORANGE_BLOCK,
-            resource.RED_BLOCK, resource.YELLOW_BLOCK]
-
-blocks_img = [pygame.image.load(block) for block in blocks_path]
 
 
 class Piece(object):
@@ -59,7 +50,7 @@ class Block(object):
         self.img_index = img_index
 
     def draw(self, drawer, position):
-        drawer.blit(blocks_img[self.img_index], position)
+        drawer.blit(resource.BLOCKS_IMG[self.img_index], position)
 
 
 class Grid(object):
@@ -249,14 +240,16 @@ class PiecePreview(object):
         block_size = config.BLOCK_SIZE
         block_size_and_pad = block_size + config.BLOCK_PAD
         bsap = block_size_and_pad
+        print("-" * 20)
         for piece in pieces[:self.num_pieces]:
             shape_pos = list(zip([(l,c) for l in range(4) for c in range(4)], piece.shape))
             for pos, block in shape_pos:
+                print(pos, block)
                 x, y = pos
                 color = 0
                 if block:
                     color = piece.color
-                self.draw_block(color, (ini_x+x*bsap, ini_y+y*bsap))
+                self.draw_block(color, (ini_x + x * bsap, ini_y + y * bsap))
             ini_y += 100
 
     def draw_block(self, color, position):
@@ -272,7 +265,7 @@ class Score (object):
         self.lines = 0
         self.show_score = show_score
         self.show_lines = show_lines
-        self.font = pygame.font.Font(None, 30) # TODO: remove this hard coded value!
+        self.font = resource.GAME_FONT
         self.drawer = drawer
 
     def update(self, num_lines=0):
@@ -315,7 +308,7 @@ class GameScreen(object):
             random.shuffle(self.color_choices)
         new_shape = random.choice(shapes.ALL_SHAPES)
         new_color = self.color_choices.pop()
-        initial_position = random.randint(0, len(new_shape)-1)
+        initial_position = random.randint(0, len(new_shape) - 1)
         return Piece(new_shape, new_color, (3, -4), initial_position)
 
     def loop(self, action=None):
