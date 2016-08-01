@@ -132,10 +132,10 @@ class RecordContext(Context):
 
     def execute(self):
         try:
-            records = map(int, open(config.RECORD_FILE).readlines())
+            records = list(map(int, open(config.RECORD_FILE).readlines()))
         except Exception as e:
-            print "TODO =)", e
-        print records
+            print("TODO =)", e)
+        print(records)
         self.drawer.fill(cl.BEATIFUL_BLUE)
         screen_w, screen_h = config.SCREEN_RESOUTION
         FPS = 32  # frames per second setting

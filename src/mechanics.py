@@ -99,8 +99,8 @@ class Grid(object):
 
     def _shape_to_positions(self, shape, base_position):
         x, y = base_position
-        shape_pos = zip([(l+y,c+x) for l in range(4) for c in range(4)], shape)
-        return map(lambda a:a[0], filter(lambda a:a[1] == 1, shape_pos))
+        shape_pos = list(zip([(l+y,c+x) for l in range(4) for c in range(4)], shape))
+        return [a[0] for a in [a for a in shape_pos if a[1] == 1]]
 
     def get_piece_positions(self, piece):
         return self._shape_to_positions(piece.shape, piece.position)
@@ -123,7 +123,7 @@ class Grid(object):
         if True, returns the next positions, otherwise returns None
         """
         next = positions[:]
-        for i in xrange(len(next)):
+        for i in range(len(next)):
             next[i] = next[i][0]+1, next[i][1]
         if self.verify_collision(next):
             return None
@@ -134,7 +134,7 @@ class Grid(object):
         if True, returns the next positions, otherwise returns None
         """
         next = positions[:]
-        for i in xrange(len(next)):
+        for i in range(len(next)):
             next[i] = next[i][0], next[i][1]+1
         if self.verify_collision(next):
             return None
@@ -145,7 +145,7 @@ class Grid(object):
         if True, returns the next positions, otherwise returns None
         """
         next = positions[:]
-        for i in xrange(len(next)):
+        for i in range(len(next)):
             next[i] = next[i][0], next[i][1]-1
         if self.verify_collision(next):
             return None
@@ -250,7 +250,7 @@ class PiecePreview(object):
         block_size_and_pad = block_size + config.BLOCK_PAD
         bsap = block_size_and_pad
         for piece in pieces[:self.num_pieces]:
-            shape_pos = zip([(l,c) for l in range(4) for c in range(4)], piece.shape)
+            shape_pos = list(zip([(l,c) for l in range(4) for c in range(4)], piece.shape))
             for pos, block in shape_pos:
                 x, y = pos
                 color = 0
@@ -298,7 +298,7 @@ class GameScreen(object):
         self.grid.draw(grid_position)
         self.grid_position = grid_position
         # we humans don't like real randomness...
-        self.color_choices = range(1, len(piece_colors))
+        self.color_choices = list(range(1, len(piece_colors)))
         random.shuffle(self.color_choices)
         drawer.display()
         self.drawer = drawer
@@ -311,7 +311,7 @@ class GameScreen(object):
 
     def generate_piece(self):
         if len(self.color_choices) == 0:
-            self.color_choices = range(1, len(piece_colors))
+            self.color_choices = list(range(1, len(piece_colors)))
             random.shuffle(self.color_choices)
         new_shape = random.choice(shapes.ALL_SHAPES)
         new_color = self.color_choices.pop()

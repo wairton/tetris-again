@@ -27,7 +27,7 @@ class Game(object):
             elif option == 'records':
                 RecordContext(self.draw).execute()
             else:
-                print option, 'unknown'
+                print(option, 'unknown')
 
 if __name__ == '__main__':
     game = Game()
