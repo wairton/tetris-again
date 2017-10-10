@@ -4,9 +4,14 @@ tetris_again
 It's a implementation of the famous tetris game!
 
 
-#How To Play
+# Install
+```bash
+pip install -r requirements.txt
+```
+
+# How To Play
 Well, it is a tetris game.. if you don't know this game
-(maybe you're from other planet) please refer to 
+(maybe you're from other planet) please refer to
 [this](http://www.tetris.com/how-to-play-tetris/beginner-tips.aspx) link.
 
 - use the RIGHT and LEFT arrow keys to move the piece;
