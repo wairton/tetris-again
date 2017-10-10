@@ -1,14 +1,12 @@
 import sys
 
 import pygame
-from pygame.locals import *
 
-import config
-import color
 from draw import Draw
+import config
 
 
-class Game(object):
+class Game:
     def __init__(self):
         pygame.init()
         self.draw = Draw(pygame.display.set_mode(config.SCREEN_RESOUTION))
@@ -28,6 +26,7 @@ class Game(object):
                 ctx.RecordContext(self.draw).execute()
             else:
                 print(option, 'unknown')
+
 
 if __name__ == '__main__':
     game = Game()

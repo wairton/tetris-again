@@ -2,7 +2,7 @@ import time
 import sys
 
 import pygame
-from pygame.locals import *
+import pygame.locals as pl
 
 import config
 import color as cl
@@ -26,9 +26,9 @@ class IntroContext(Context):
         self.drawer.fill(cl.BEATIFUL_BLUE)
         # soundObj = pygame.mixer.Sound('thundar.wav')
         # soundObj.play()
-        x,y = config.SCREEN_RESOUTION
+        x, y = config.SCREEN_RESOUTION
         logo_width = logo.get_width()
-        self.drawer.blit(logo,((x-logo_width)/2,y/3))
+        self.drawer.blit(logo, ((x - logo_width) / 2, y / 3))
         self.drawer.display()
         time.sleep(2)
         self.drawer.fill(cl.BLACK)
@@ -50,15 +50,15 @@ class MainMenuContext(Context):
             for event in pygame.event.get():
                 if event.type != pygame.KEYDOWN:
                     continue
-                if event.key in [K_DOWN, K_RIGHT]:
+                if event.key in [pl.K_DOWN, pl.K_RIGHT]:
                     self.selected_option += 1
                     self.selected_option %= len(self.options)
-                elif event.key in [K_UP, K_LEFT]:
+                elif event.key in [pl.K_UP, pl.K_LEFT]:
                     self.selected_option += len(self.options) - 1
                     self.selected_option %= len(self.options)
-                elif event.key == K_ESCAPE:
+                elif event.key == pl.K_ESCAPE:
                     return 'exit'
-                elif event.key == K_RETURN:
+                elif event.key == pl.K_RETURN:
                     return self.options[self.selected_option]
 
     def drawMenu(self):
@@ -87,33 +87,32 @@ class PlayContext(Context):
         super(PlayContext, self).__init__(drawer)
 
     def execute(self):
-        game_screen = GameScreen(self.drawer, (10,60))
+        game_screen = GameScreen(self.drawer, (10, 60))
         i, mod = 0, 8
         FPS = 32  # frames per second setting
         morreu = False
-        fast = False
         while True:
             i += 1
             fpsClock = pygame.time.Clock()
             for event in pygame.event.get():
-                if event.type == QUIT:
+                if event.type == pl.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == KEYDOWN:
-                    if event.key == K_ESCAPE:
+                if event.type == pl.KEYDOWN:
+                    if event.key == pl.K_ESCAPE:
                         return 'foo'
-                    elif event.key == K_UP:
+                    elif event.key == pl.K_UP:
                         game_screen.loop('rotate')
-                    elif event.key == K_DOWN:
+                    elif event.key == pl.K_DOWN:
                         mod = 2
-                    elif event.key == K_LEFT:
+                    elif event.key == pl.K_LEFT:
                         game_screen.loop('left')
-                    elif event.key == K_RIGHT:
+                    elif event.key == pl.K_RIGHT:
                         game_screen.loop('right')
-                    elif event.key == K_SPACE:
+                    elif event.key == pl.K_SPACE:
                         game_screen.loop('ground')
-                if event.type == KEYUP:
-                    if event.key == K_DOWN:
+                if event.type == pl.KEYUP:
+                    if event.key == pl.K_DOWN:
                         mod = 8
             if i % mod == 0:
                 morreu = game_screen.loop()
@@ -141,15 +140,16 @@ class RecordContext(Context):
         while True:
             fpsClock = pygame.time.Clock()
             for event in pygame.event.get():
-                if event.type == QUIT:
+                if event.type == pl.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == KEYDOWN:
+                elif event.type == pl.KEYDOWN:
                     return 'foo'
             for i in range(len(records)):
-                text = font.render("%d. %d" % (i+1, records[i]), 1, (20, 20, 20))
+                msg = "{}. {}".format(i + 1, records[i])
+                text = font.render(msg, 1, (20, 20, 20))
                 text_x_pos = (screen_w - text.get_width()) / 2
-                self.drawer.blit(text, (text_x_pos, (text.get_height() + 2) * i + 50))
+                self.drawer.blit(
+                    text, (text_x_pos, (text.get_height() + 2) * i + 50))
             fpsClock.tick(FPS)
             self.drawer.display()
-
