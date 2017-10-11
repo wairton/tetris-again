@@ -18,7 +18,7 @@ border_colors = [
 ]
 
 
-class Piece(object):
+class Piece:
     def __init__(self, shape, color, position, initial_state):
         self._shape = shape
         self.state = initial_state
@@ -50,7 +50,7 @@ class Piece(object):
             self.state = (self.state + 1) % len(self._shape)
 
 
-class Block(object):
+class Block:
     def __init__(self, img_index):
         self.img_index = img_index
 
@@ -58,7 +58,7 @@ class Block(object):
         drawer.blit(resource.BLOCKS_IMG[self.img_index], position)
 
 
-class Grid(object):
+class Grid:
     def __init__(self, ncolumns, nlines, draw, valid_colors):
         self.active_pieces = []
         # historical bug! don't remove this commented line by now...
@@ -234,7 +234,7 @@ class Grid(object):
         return lines
 
 
-class PiecePreview(object):
+class PiecePreview:
     def __init__(self, position, num_pieces, drawer):
         self.position = position
         self.num_pieces = num_pieces

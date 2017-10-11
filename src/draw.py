@@ -1,7 +1,7 @@
 import pygame
 
 
-class Draw(object):
+class Draw:
     def __init__(self, surface=None):
         self._surface = surface
 
