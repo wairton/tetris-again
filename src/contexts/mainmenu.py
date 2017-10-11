@@ -37,7 +37,7 @@ class MainMenuContext(Context):
         x_pad = (screen_w - button_w) / 2
         y_pad = screen_h - (button_h + 10) * len(self.options)
         option_size = button_h + 5
-        self.drawer.fill(cl.BEATIFUL_BLUE)
+        self.drawer.fill(cl.BEAUTIFUL_BLUE)
         font = pygame.font.Font(None, 50)
         for i, option in enumerate(self.options):
             y_pos = y_pad + option_size * i

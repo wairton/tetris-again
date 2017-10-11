@@ -13,7 +13,7 @@ class IntroContext(Context):
 
     def execute(self):
         logo = pygame.image.load(config.IMG_LOGO)
-        self.drawer.fill(cl.BEATIFUL_BLUE)
+        self.drawer.fill(cl.BEAUTIFUL_BLUE)
         x, y = config.SCREEN_RESOUTION
         logo_width = logo.get_width()
         self.drawer.blit(logo, ((x - logo_width) / 2, y / 3))

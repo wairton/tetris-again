@@ -13,7 +13,7 @@ piece_colors = [
 ]
 
 border_colors = [
-    (200, 200, 200), color.DARK_RED, color.DARK_ORANGE, color.DARK_YELLOW,
+    color.GRAY, color.DARK_RED, color.DARK_ORANGE, color.DARK_YELLOW,
     color.DARK_GREEN, color.DARK_BLUE, color.DARK_INDIGO, color.DARK_LIGHT_BLUE
 ]
 
@@ -26,7 +26,7 @@ class Piece:
         self.position = position
 
     def __str__(self):
-        return 'Shape: ' + str(self._shape[self.state]) + ' ' + str(self.color)
+        return 'Shape: {} {}'.format(self._shape[self.state], self.color)
 
     @property
     def shape(self):
@@ -42,10 +42,7 @@ class Piece:
 
     def rotate(self, clockwise=True):
         if clockwise:
-            if self.state > 0:
-                self.state -= 1
-            else:
-                self.state = len(self._shape) - 1
+            self.state = (self.state - 1) % len(self._shape)
         else:
             self.state = (self.state + 1) % len(self._shape)
 
@@ -178,10 +175,10 @@ class Grid:
                 return False, False
 
     def ground(self):
-        colidiu, died = self.step()
-        while not colidiu:
-            colidiu, died = self.step()
-        return colidiu, died
+        collided, died = self.step()
+        while not collided:
+            collided, died = self.step()
+        return collided, died
 
     def rotate(self):
         for i, piece in enumerate(self.active_pieces):
@@ -291,7 +288,7 @@ class GameScreen:
         self.grid = Grid(
             config.GRID_WIDTH, config.GRID_HEIGHT, drawer, piece_colors)
         self.preview = PiecePreview((350, 100), 3, drawer)
-        drawer.fill(color.BEATIFUL_BLUE)
+        drawer.fill(color.BEAUTIFUL_BLUE)
         self.grid.draw(grid_position)
         self.grid_position = grid_position
         # we humans don't like real randomness...

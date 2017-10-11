@@ -18,7 +18,7 @@ class RecordContext(Context):
         except Exception as e:
             print("TODO =)", e)
         print(records)
-        self.drawer.fill(cl.BEATIFUL_BLUE)
+        self.drawer.fill(cl.BEAUTIFUL_BLUE)
         screen_w, screen_h = config.SCREEN_RESOUTION
         FPS = 32  # frames per second setting
         font = pygame.font.Font(None, 40)
