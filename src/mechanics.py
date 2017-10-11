@@ -245,11 +245,9 @@ class PiecePreview:
         block_size = config.BLOCK_SIZE
         block_size_and_pad = block_size + config.BLOCK_PAD
         bsap = block_size_and_pad
-        print("-" * 20)
         for piece in pieces[:self.num_pieces]:
-            shape_pos = list(zip([(l, c) for l in range(4) for c in range(4)], piece.shape))
+            shape_pos = list(zip([(c, l) for l in range(4) for c in range(4)], piece.shape))
             for pos, block in shape_pos:
-                print(pos, block)
                 x, y = pos
                 color = 0
                 if block:
