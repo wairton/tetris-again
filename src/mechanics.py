@@ -178,10 +178,10 @@ class Grid(object):
                 return False, False
 
     def ground(self):
-        colidiu, morreu = self.step()
+        colidiu, died = self.step()
         while not colidiu:
-            colidiu, morreu = self.step()
-        return colidiu, morreu
+            colidiu, died = self.step()
+        return colidiu, died
 
     def rotate(self):
         for i, piece in enumerate(self.active_pieces):
@@ -319,19 +319,19 @@ class GameScreen:
 
     def loop(self, action=None):
         if action == 'left':
-            colide, morreu = self.grid.left()
+            collided, died = self.grid.left()
         elif action == 'right':
-            colide, morreu = self.grid.right()
+            collided, died = self.grid.right()
         elif action == 'rotate':
-            colide, morreu = self.grid.rotate()
+            collided, died = self.grid.rotate()
         elif action == 'ground':
-            colide, morreu = self.grid.ground()
+            collided, died = self.grid.ground()
         else:
-            colide, morreu = self.grid.step()
+            collided, died = self.grid.step()
         self.grid.draw(self.grid_position)
-        if morreu:
+        if died:
             return True
-        if colide:
+        if collided:
             lines = self.grid.check_complete_lines()
             if len(lines) > 0:
                 self.grid.remove_lines(lines)

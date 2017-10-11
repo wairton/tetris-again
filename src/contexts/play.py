@@ -15,10 +15,10 @@ class PlayContext(Context):
         game_screen = GameScreen(self.drawer, (10, 60))
         i, mod = 0, 8
         FPS = 32  # frames per second setting
-        morreu = False
+        died = False
         while True:
             i += 1
-            fpsClock = pygame.time.Clock()
+            fps_clock = pygame.time.Clock()
             for event in pygame.event.get():
                 if event.type == pl.QUIT:
                     pygame.quit()
@@ -40,9 +40,9 @@ class PlayContext(Context):
                     if event.key == pl.K_DOWN:
                         mod = 8
             if i % mod == 0:
-                morreu = game_screen.loop()
+                died = game_screen.loop()
                 i = 0
             pygame.display.update()
-            if morreu:
+            if died:
                 return 'foo'
-            fpsClock.tick(FPS)
+            fps_clock.tick(FPS)

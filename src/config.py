@@ -1,5 +1,7 @@
-import color
 import os
+
+import color
+
 
 # game main settings
 GAME_WINDOW_TITLE = "Tetris Again"
