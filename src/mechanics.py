@@ -46,6 +46,25 @@ class Piece:
         else:
             self.state = (self.state + 1) % len(self._shape)
 
+    def get_block_coords(self):
+        # FIXME: converting a 16-tuple into a 4 X 4 [list]
+        # this is NOT the best approach
+        shape = [self.shape[i:i + 4] for i in range(0, 13, 4)]
+        sx, sy, ex, ey = 4, 4, 0, 0
+        for line_index, line in enumerate(shape):
+            for col_index, item in enumerate(line):
+                if item == 0:
+                    continue
+                if line_index < sy:
+                    sy = line_index
+                if col_index < sx:
+                    sx = col_index
+                if line_index > ey:
+                    ey = line_index
+                if col_index > ex:
+                    ex = col_index
+        return sx, sy, ex, ey
+
 
 class Block:
     def __init__(self, img_index):
@@ -242,14 +261,22 @@ class PiecePreview:
         block_size = config.BLOCK_SIZE
         block_size_and_pad = block_size + config.BLOCK_PAD
         bsap = block_size_and_pad
+        preview_width = 3 * bsap + block_size
+        preview_heigh = 12 * bsap + block_size
+        self.drawer.rect(color.BLACK, (ini_x, ini_y, preview_width, preview_heigh))
         for piece in pieces[:self.num_pieces]:
             shape_pos = list(zip([(c, l) for l in range(4) for c in range(4)], piece.shape))
+            sx, sy, ex, ey = piece.get_block_coords()
+            piece_width = (ex - sx) * bsap + block_size
+            ppos = ini_x + (preview_width - piece_width) / 2
+            print(ini_x, ppos)
             for pos, block in shape_pos:
+                if not block:
+                    continue
                 x, y = pos
-                color = 0
                 if block:
-                    color = piece.color
-                self.draw_block(color, (ini_x + x * bsap, ini_y + y * bsap))
+                    piece_color = piece.color
+                self.draw_block(piece_color, (ppos + (x - sx) * bsap, ini_y + y * bsap))
             ini_y += 100
 
     def draw_block(self, color, position):
