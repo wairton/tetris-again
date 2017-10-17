@@ -258,26 +258,26 @@ class PiecePreview:
 
     def draw(self, pieces):
         ini_x, ini_y = self.position
-        block_size = config.BLOCK_SIZE
-        block_size_and_pad = block_size + config.BLOCK_PAD
-        bsap = block_size_and_pad
-        preview_width = 3 * bsap + block_size
-        preview_heigh = 12 * bsap + block_size
+        block_size, block_pad = config.BLOCK_SIZE, config.BLOCK_PAD
+        bsap = block_size + config.BLOCK_PAD
+        preview_width = 4 * bsap
+        preview_heigh = 12 * block_size + 8 * block_pad
         self.drawer.rect(color.BLACK, (ini_x, ini_y, preview_width, preview_heigh))
+        ini_y += 2 * block_pad
+        ini_x += 2 * block_pad
         for piece in pieces[:self.num_pieces]:
             shape_pos = list(zip([(c, l) for l in range(4) for c in range(4)], piece.shape))
             sx, sy, ex, ey = piece.get_block_coords()
             piece_width = (ex - sx) * bsap + block_size
             ppos = ini_x + (preview_width - piece_width) / 2
-            print(ini_x, ppos)
             for pos, block in shape_pos:
                 if not block:
                     continue
                 x, y = pos
                 if block:
                     piece_color = piece.color
-                self.draw_block(piece_color, (ppos + (x - sx) * bsap, ini_y + y * bsap))
-            ini_y += 100
+                self.draw_block(piece_color, (ppos + (x - sx) * block_size, ini_y + y * block_size))
+            ini_y += 4 * block_size + 2 * block_pad
 
     def draw_block(self, color, position):
         block = Block(color)
@@ -315,7 +315,7 @@ class GameScreen:
         self.grid = Grid(
             config.GRID_WIDTH, config.GRID_HEIGHT, drawer, piece_colors)
         self.preview = PiecePreview((350, 100), 3, drawer)
-        drawer.fill(color.BEAUTIFUL_BLUE)
+        drawer.fill(color.WHITE)
         self.grid.draw(grid_position)
         self.grid_position = grid_position
         # we humans don't like real randomness...
