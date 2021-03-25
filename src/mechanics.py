@@ -38,10 +38,8 @@ class Piece:
         return self._shape[(self.state + 1) % len(self._shape)]
 
     def rotate(self, clockwise=True):
-        if clockwise:
-            self.state = (self.state - 1) % len(self._shape)
-        else:
-            self.state = (self.state + 1) % len(self._shape)
+        inc = -1 if clockwise else 1
+        self.state = (self.state + inc) % len(self._shape)
 
     def get_block_coords(self):
         # FIXME: converting a 16-tuple into a 4 X 4 [list]
@@ -72,13 +70,12 @@ class Block:
 
 
 class Grid:
-    def __init__(self, ncolumns, nlines, draw, valid_colors):
+    def __init__(self, ncolumns, nlines, draw):
         self.active_pieces = []
         self.structure = [[0] * ncolumns for _ in range(nlines)]
         self.ncolumns = ncolumns
         self.nlines = nlines
         self.drawer = draw
-        self.valid_colors = valid_colors
 
     def filled(self, color):
         for i, line in enumerate(self.structure):
@@ -314,8 +311,7 @@ class GameScreen:
         STEP = enum.auto()
 
     def __init__(self, drawer, grid_position):
-        self.grid = Grid(
-            config.GRID_WIDTH, config.GRID_HEIGHT, drawer, piece_colors)
+        self.grid = Grid(config.GRID_WIDTH, config.GRID_HEIGHT, drawer)
         self.preview = PiecePreview((350, 100), 3, drawer)
         drawer.fill(color.WHITE)
         self.grid.draw(grid_position)
