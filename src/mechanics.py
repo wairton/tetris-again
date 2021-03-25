@@ -1,4 +1,5 @@
 import random
+import enum
 
 import config
 import color
@@ -12,10 +13,6 @@ piece_colors = [
     color.BLUE, color.INDIGO, color.LIGHT_BLUE
 ]
 
-border_colors = [
-    color.GRAY, color.DARK_RED, color.DARK_ORANGE, color.DARK_YELLOW,
-    color.DARK_GREEN, color.DARK_BLUE, color.DARK_INDIGO, color.DARK_LIGHT_BLUE
-]
 
 
 class Piece:
@@ -77,9 +74,7 @@ class Block:
 class Grid:
     def __init__(self, ncolumns, nlines, draw, valid_colors):
         self.active_pieces = []
-        # historical bug! don't remove this commented line by now...
-        # self.structure = [[0] * ncolumns] * nlines
-        self.structure = [[0 for _ in range(ncolumns)] for _ in range(nlines)]
+        self.structure = [[0] * ncolumns for _ in range(nlines)]
         self.ncolumns = ncolumns
         self.nlines = nlines
         self.drawer = draw
@@ -118,10 +113,10 @@ class Grid:
         return self._shape_to_positions(piece.shape, piece.position)
 
     def fill_piece_positions(self, blocks, value):
-        for linha, coluna in blocks:
-            if linha < 0 or coluna < 0:
+        for line, column in blocks:
+            if line < 0 or column < 0:
                 continue
-            self.structure[linha][coluna] = value
+            self.structure[line][column] = value
 
     def try_piece_rotate(self, piece):
         rotated_shape = piece.next_rotate()
@@ -311,6 +306,13 @@ class Score:
 
 
 class GameScreen:
+    class Action(enum.Enum):
+        LEFT = enum.auto()
+        RIGHT = enum.auto()
+        ROTATE = enum.auto()
+        GROUND = enum.auto()
+        STEP = enum.auto()
+
     def __init__(self, drawer, grid_position):
         self.grid = Grid(
             config.GRID_WIDTH, config.GRID_HEIGHT, drawer, piece_colors)
@@ -339,17 +341,15 @@ class GameScreen:
         initial_position = random.randint(0, len(new_shape) - 1)
         return Piece(new_shape, new_color, (3, -4), initial_position)
 
-    def loop(self, action=None):
-        if action == 'left':
-            collided, died = self.grid.left()
-        elif action == 'right':
-            collided, died = self.grid.right()
-        elif action == 'rotate':
-            collided, died = self.grid.rotate()
-        elif action == 'ground':
-            collided, died = self.grid.ground()
-        else:
-            collided, died = self.grid.step()
+    def loop(self, action: Action):
+        mapping = {
+            GameScreen.Action.LEFT: self.grid.left,
+            GameScreen.Action.RIGHT: self.grid.right,
+            GameScreen.Action.ROTATE: self.grid.rotate,
+            GameScreen.Action.GROUND: self.grid.ground,
+            GameScreen.Action.STEP: self.grid.step,
+        }
+        collided, died = mapping[action]()
         self.grid.draw(self.grid_position)
         if died:
             return True

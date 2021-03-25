@@ -12,7 +12,7 @@ class Game:
         self.draw = Draw(pygame.display.set_mode(config.SCREEN_RESOUTION))
         pygame.display.set_caption(config.GAME_WINDOW_TITLE)
 
-    def mainloop(self):
+    def loop(self):
         import contexts as ctx
         ctx.IntroContext(self.draw).execute()
         while True:
@@ -28,4 +28,4 @@ class Game:
 
 
 if __name__ == '__main__':
-    Game().mainloop()
+    Game().loop()

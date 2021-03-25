@@ -8,9 +8,6 @@ from .base import Context
 
 
 class PlayContext(Context):
-    def __init__(self, drawer):
-        super(PlayContext, self).__init__(drawer)
-
     def execute(self):
         game_screen = GameScreen(self.drawer, (10, 60))
         i, mod = 0, 8
@@ -27,20 +24,20 @@ class PlayContext(Context):
                     if event.key == pl.K_ESCAPE:
                         return 'foo'
                     elif event.key == pl.K_UP:
-                        game_screen.loop('rotate')
+                        game_screen.loop(GameScreen.Action.ROTATE)
                     elif event.key == pl.K_DOWN:
                         mod = 2
                     elif event.key == pl.K_LEFT:
-                        game_screen.loop('left')
+                        game_screen.loop(GameScreen.Action.LEFT)
                     elif event.key == pl.K_RIGHT:
-                        game_screen.loop('right')
+                        game_screen.loop(GameScreen.Action.RIGHT)
                     elif event.key == pl.K_SPACE:
-                        game_screen.loop('ground')
+                        game_screen.loop(GameScreen.Action.GROUND)
                 if event.type == pl.KEYUP:
                     if event.key == pl.K_DOWN:
                         mod = 8
             if i % mod == 0:
-                died = game_screen.loop()
+                died = game_screen.loop(GameScreen.Action.STEP)
                 i = 0
             pygame.display.update()
             if died:

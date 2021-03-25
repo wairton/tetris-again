@@ -3,7 +3,7 @@ import pygame.locals as pl
 
 import config
 from .base import Context
-import color as cl
+import color
 
 from images import image_loader
 
@@ -18,7 +18,7 @@ class MainMenuContext(Context):
         self.button = image_loader(config.IMG_BUTTON)
         self.button_sel = image_loader(config.IMG_BUTTON_SEL)
         while True:
-            self.drawMenu()
+            self.draw_menu()
             for event in pygame.event.get():
                 if event.type != pygame.KEYDOWN:
                     continue
@@ -33,17 +33,17 @@ class MainMenuContext(Context):
                 elif event.key == pl.K_RETURN:
                     return self.options[self.selected_option]
 
-    def drawMenu(self):
+    def draw_menu(self):
         screen_w, screen_h = config.SCREEN_RESOUTION
         button_w, button_h = self.button.size
         x_pad = (screen_w - button_w) / 2
         y_pad = screen_h - (button_h + 10) * len(self.options)
         option_size = button_h + 5
-        self.drawer.fill(cl.BEAUTIFUL_BLUE)
+        self.drawer.fill(color.BEAUTIFUL_BLUE)
         font = pygame.font.Font(None, 50)
         for i, option in enumerate(self.options):
             y_pos = y_pad + option_size * i
-            text = font.render(option, 1, (20, 20, 20))
+            text = font.render(option, 1, color.DARK_GRAY)
             if i == self.selected_option:
                 self.drawer.blit(self.button_sel.surface, (x_pad, y_pos))
             else:

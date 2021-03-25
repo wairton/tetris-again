@@ -4,7 +4,7 @@ import pygame
 import pygame.locals as pl
 
 import config
-import color as cl
+import color
 from .base import Context
 
 
@@ -18,7 +18,7 @@ class RecordContext(Context):
         except Exception as e:
             print("TODO =)", e)
         print(records)
-        self.drawer.fill(cl.BEAUTIFUL_BLUE)
+        self.drawer.fill(color.BEAUTIFUL_BLUE)
         screen_w, screen_h = config.SCREEN_RESOUTION
         FPS = 32  # frames per second setting
         font = pygame.font.Font(None, 40)
