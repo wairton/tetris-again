@@ -1,10 +1,9 @@
 import time
 
-import pygame
-
 import config
 import color as cl
 from .base import Context
+from images import image_loader
 
 
 class IntroContext(Context):
@@ -12,11 +11,10 @@ class IntroContext(Context):
         super().__init__(drawer)
 
     def execute(self):
-        logo = pygame.image.load(config.IMG_LOGO)
+        logo = image_loader(config.IMG_LOGO)
         self.drawer.fill(cl.BEAUTIFUL_BLUE)
         x, y = config.SCREEN_RESOUTION
-        logo_width = logo.get_width()
-        self.drawer.blit(logo, ((x - logo_width) / 2, y / 3))
+        self.drawer.blit(logo.surface, ((x - logo.width) / 2, y / 3))
         self.drawer.display()
         time.sleep(2)
         self.drawer.fill(cl.BLACK)

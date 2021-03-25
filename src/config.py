@@ -1,7 +1,16 @@
 import os
+from enum import Enum
 
 import color
 
+
+
+
+class Backend(Enum):
+    PYGAME = 1
+    OTHER = 2
+
+BACKEND = Backend.PYGAME
 
 # game main settings
 GAME_WINDOW_TITLE = "Tetris Again"

@@ -3,6 +3,7 @@ import os
 import pygame
 
 from config import IMG_PATH
+from images import image_loader
 
 # menu
 IMG_LOGO = os.path.join(IMG_PATH, 'logo_.png')
@@ -25,6 +26,6 @@ BLOCKS_PATH = [
     RED_BLOCK, YELLOW_BLOCK
 ]
 
-BLOCKS_IMG = [pygame.image.load(block) for block in BLOCKS_PATH]
+BLOCKS_IMG = [image_loader(block) for block in BLOCKS_PATH]
 
 GAME_FONT = pygame.font.Font(None, 30)  # TODO: remove this hard coded value!

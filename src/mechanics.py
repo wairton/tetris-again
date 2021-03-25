@@ -71,7 +71,7 @@ class Block:
         self.img_index = img_index
 
     def draw(self, drawer, position):
-        drawer.blit(resource.BLOCKS_IMG[self.img_index], position)
+        drawer.blit(resource.BLOCKS_IMG[self.img_index].surface, position)
 
 
 class Grid:
