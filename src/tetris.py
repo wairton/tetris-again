@@ -20,7 +20,8 @@ class Game:
             if option == 'exit':
                 sys.exit()
             elif option == 'play':
-                ctx.PlayContext(self.draw).execute()
+                score = ctx.PlayContext(self.draw).execute()
+                ctx.RecordContext(self.draw).newRecord(score)
             elif option == 'records':
                 ctx.RecordContext(self.draw).execute()
             else:

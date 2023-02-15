@@ -14,7 +14,6 @@ piece_colors = [
 ]
 
 
-
 class Piece:
     def __init__(self, shape, color, position, initial_state):
         self._shape = shape
@@ -90,7 +89,7 @@ class Grid:
             for j, c in enumerate(line):
                 self.draw_block(
                     c, (ini_x + j * block_size_and_pad, ini_y + i * block_size_and_pad))
-
+    
     def draw_block(self, color, position):
         block = Block(color)
         block.draw(self.drawer, position)
@@ -175,8 +174,8 @@ class Grid:
             if next is None:
                 self.fill_piece_positions(blocks, piece.color)
                 self.pop_piece()
-                for l, c in blocks:
-                    if l <= 0:
+                for line in blocks:
+                    if line[0] <= 0:
                         return True, True
                 return True, False
             else:
@@ -301,6 +300,9 @@ class Score:
         text = self.font.render("score: %s" % self.score, 1, color.WHITE2)
         self.drawer.blit(text, (x, y + 50))
 
+    def receive_score(self):
+        return self.score
+
 
 class GameScreen:
     class Action(enum.Enum):
@@ -338,6 +340,7 @@ class GameScreen:
         return Piece(new_shape, new_color, (3, -4), initial_position)
 
     def loop(self, action: Action):
+
         mapping = {
             GameScreen.Action.LEFT: self.grid.left,
             GameScreen.Action.RIGHT: self.grid.right,
@@ -345,10 +348,11 @@ class GameScreen:
             GameScreen.Action.GROUND: self.grid.ground,
             GameScreen.Action.STEP: self.grid.step,
         }
+
         collided, died = mapping[action]()
         self.grid.draw(self.grid_position)
         if died:
-            return True
+            return True, self.score.receive_score()
         if collided:
             lines = self.grid.check_complete_lines()
             if len(lines) > 0:
@@ -357,4 +361,4 @@ class GameScreen:
             self.grid.add_piece(self.next_pieces.pop(0))
             self.next_pieces.append(self.generate_piece())
             self.preview.draw(self.next_pieces)
-        return False
+        return False, None
