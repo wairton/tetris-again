@@ -34,4 +34,4 @@ GRID_PAD = 2
 # block settings
 BLOCK_SIZE = 25
 BLOCK_PAD = 1
-RECORD_SIZE = 5
+RECORD_SIZE = 10

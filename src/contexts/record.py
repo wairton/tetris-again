@@ -29,12 +29,12 @@ class RecordContext(Context):
         fpsClock = pygame.time.Clock()
 
         # Getting the highscore table and print it
-        for highscore in records:
-            msg = "{}. {} {}".format(highscore, records[highscore][0], records[highscore][1])
+        for count, highscore in enumerate(records):
+            msg = "{}. {} {}".format(count + 1, highscore['name'], highscore['score'])
             text = font.render(msg, 1, (20, 20, 20))
             text_x_pos = (screen_w - text.get_width()) / 2
             self.drawer.blit(
-                text, (text_x_pos, (text.get_height() + 2) * int(highscore) + 50))
+                text, (text_x_pos, (text.get_height() + 2) * count + 50))
 
         while True:
             for event in pygame.event.get():
@@ -52,6 +52,10 @@ class RecordContext(Context):
         except Exception as e:
             print(e)
 
+        if len(records) < config.RECORD_SIZE:
+            self.new_highscore(score)
+            return 'No matter'
+
         for highscore in records:
             if score > highscore['score']:
                 self.new_highscore(score)
@@ -67,8 +71,8 @@ class RecordContext(Context):
             records = json.load(open(config.RECORD_FILE))
         except Exception as e:
             print(e)
-
-        records.pop()
+        if len(records) >= config.RECORD_SIZE:
+            records.pop()
         records.append({'name': '___', 'score': score})
         records.sort(reverse=True, key=self.sort_by_score)
         title = 'Insert your nickname!'
