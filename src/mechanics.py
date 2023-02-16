@@ -257,7 +257,7 @@ class PiecePreview:
         ini_y += 2 * block_pad
         ini_x += 2 * block_pad
         for piece in pieces[:self.num_pieces]:
-            shape_pos = list(zip([(c, l) for l in range(4) for c in range(4)], piece.shape))
+            shape_pos = list(zip([(c, line) for line in range(4) for c in range(4)], piece.shape))
             sx, sy, ex, ey = piece.get_block_coords()
             piece_width = (ex - sx) * bsap + block_size
             ppos = ini_x + (preview_width - piece_width) / 2

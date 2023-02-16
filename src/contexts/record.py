@@ -5,6 +5,7 @@ import pygame.locals as pl
 
 import config
 import color
+import json
 from .base import Context
 
 
@@ -13,21 +14,28 @@ class RecordContext(Context):
         super(RecordContext, self).__init__(drawer)
 
     def execute(self):
+
+        # Opening the JSON and setting the screen
         try:
-            records = list(map(int, open(config.RECORD_FILE).readlines()))
+            records = json.load(open(config.RECORD_FILE))
         except Exception as e:
             print("TODO =)", e)
+
         self.drawer.fill(color.BEAUTIFUL_BLUE)
         screen_w, screen_h = config.SCREEN_RESOUTION
+
         FPS = 32  # frames per second setting
         font = pygame.font.Font(None, 40)
         fpsClock = pygame.time.Clock()
-        for i in range(len(records)):
-            msg = "{}. {}".format(i + 1, records[i])
+
+        # Getting the highscore table and print it
+        for highscore in records:
+            msg = "{}. {} {}".format(highscore, records[highscore][0], records[highscore][1])
             text = font.render(msg, 1, (20, 20, 20))
             text_x_pos = (screen_w - text.get_width()) / 2
             self.drawer.blit(
-                text, (text_x_pos, (text.get_height() + 2) * i + 50))
+                text, (text_x_pos, (text.get_height() + 2) * int(highscore) + 50))
+
         while True:
             for event in pygame.event.get():
                 if event.type == pl.QUIT:
@@ -38,53 +46,73 @@ class RecordContext(Context):
             fpsClock.tick(FPS)
             self.drawer.display()
 
-    def newRecord(self, score):
-        print(score)
+    def check_if_highscore(self, score):
+        try:
+            records = json.load(open(config.RECORD_FILE))
+        except Exception as e:
+            print(e)
+
+        for highscore in records:
+            if score > highscore['score']:
+                self.new_highscore(score)
+                break
+        return 'It just works'
+
+    def new_highscore(self, score):
         self.drawer.fill(color.BEAUTIFUL_BLUE)
         screen_w, screen_h = config.SCREEN_RESOUTION
-        fpsClock = pygame.time.Clock()
         font = pygame.font.Font(None, 40)
-        nick = ''
 
+        try:
+            records = json.load(open(config.RECORD_FILE))
+        except Exception as e:
+            print(e)
+
+        records.pop()
+        records.append({'name': '___', 'score': score})
+        records.sort(reverse=True, key=self.sort_by_score)
         title = 'Insert your nickname!'
         title_font = font.render(title, 1, (20, 20, 20))
         centered_text = (screen_w - title_font.get_width()) / 2
         self.drawer.blit(
-            title_font, (centered_text, 100)
+            title_font, (centered_text, 50)
         )
+        for count, highscore in enumerate(records):
+            msg = "{}. {} {}".format(count + 1, highscore['name'], highscore['score'])
+            text = font.render(msg, 1, (20, 20, 20))
+            text_x_pos = (screen_w - text.get_width()) / 2
+            self.drawer.blit(text,
+                             (text_x_pos, (text.get_height() + 2) * count + 100))
+            if highscore['name'] == '___':
+                new_score_x_pos = (screen_w - text.get_width()) / 2
+                new_score_y_pos = (text.get_height() + 2) * count + 100
+
+        insert_nick_msg = '___'
+        highscore_nick = ''
 
         while True:
             for event in pygame.event.get():
-                if event.type == pl.KEYDOWN:
-                    if event.key == pl.K_ESCAPE:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
-                    if event.unicode:
-                        if len(nick) < 3:
-                            nick += str(event.unicode)
-                            nick_font = font.render(nick, 1, (20, 20, 20))
-                            self.drawer.blit(
-                                nick_font, (centered_text, 200)
-                            )
-                        else:
-                            # Whitespace for the list
-                            nick += ' '
-                            score_list = []
-                            with open(config.RECORD_FILE) as file:
-                                for line in file:
-                                    # Splitting the string for the score
-                                    score_list.append(line.split(' '))
-                                    # Checking if the highscore beats another
-                                for count, highscore in enumerate(score_list):
-                                    if score > int(highscore[1]):
-                                        print(count)
-                                        score_list.insert(count - 1, [nick, score])
-                                        score_list.pop()
-                                        break
-                            f = open(config.RECORD_FILE, 'w')
-                            for highscore in score_list:
-                                f.write(highscore[0] + ' ' + str(highscore[1]))
-                            f.close()
-                            return 'GO BACK TO THE PASS!'
-            fpsClock.tick(32)
+                    if len(highscore_nick) == 3:
+                        records.remove({'name': '___', 'score': score})
+                        records.append({'name': highscore_nick, 'score': score})
+                        records.sort(reverse=True, key=self.sort_by_score)
+
+                        new_highscore = json.dumps(records, sort_keys=True)
+                        with open('records.json', 'w') as f:
+                            f.write(new_highscore)
+                        return 'Goodbye!'
+                    if event.unicode.isalpha():
+                        highscore_nick += event.unicode
+                        insert_nick_msg = insert_nick_msg.replace('_', event.unicode, 1)
+                        text = font.render(insert_nick_msg, 1, (20, 20, 20))
+                        self.drawer.blit(text,
+                                         (new_score_x_pos + 25, new_score_y_pos)
+                                         )
             self.drawer.display()
+
+    def sort_by_score(self, score):
+        return score['score']
