@@ -14,9 +14,9 @@ class PlayContext(Context):
         i, mod = 0, 8
         FPS = 32  # frames per second setting
         died = False
+        fps_clock = pygame.time.Clock()
         while True:
             i += 1
-            fps_clock = pygame.time.Clock()
             for event in pygame.event.get():
                 if event.type == pl.QUIT:
                     pygame.quit()

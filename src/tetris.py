@@ -24,6 +24,8 @@ class Game:
                 ctx.RecordContext(self.draw).check_if_highscore(score)
             elif option == 'records':
                 ctx.RecordContext(self.draw).execute()
+            elif option == 'options':
+                ctx.ConfigPlayerContext(self.draw).draw_space()
             else:
                 print(option, 'unknown')
 
