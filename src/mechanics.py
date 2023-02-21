@@ -89,7 +89,7 @@ class Grid:
             for j, c in enumerate(line):
                 self.draw_block(
                     c, (ini_x + j * block_size_and_pad, ini_y + i * block_size_and_pad))
-    
+
     def draw_block(self, color, position):
         block = Block(color)
         block.draw(self.drawer, position)
@@ -102,7 +102,7 @@ class Grid:
 
     def _shape_to_positions(self, shape, base_position):
         x, y = base_position
-        shape_pos = list(zip([(l + y, c + x) for l in range(4) for c in range(4)], shape))
+        shape_pos = list(zip([(line + y, c + x) for line in range(4) for c in range(4)], shape))
         return [a[0] for a in [a for a in shape_pos if a[1] == 1]]
 
     def get_piece_positions(self, piece):
