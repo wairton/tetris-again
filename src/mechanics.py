@@ -1,7 +1,7 @@
 import random
 import enum
 
-import config
+import configuration.config as config
 import color
 import resource
 import shapes

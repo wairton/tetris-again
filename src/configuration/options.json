@@ -1,0 +1,7 @@
+{
+    "Ground": "space",
+    "Down": "down",
+    "Left": "left",
+    "Right": "right",
+    "Rotate": "up"
+}

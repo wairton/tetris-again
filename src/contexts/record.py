@@ -3,7 +3,7 @@ import sys
 import pygame
 import pygame.locals as pl
 
-import config
+import configuration.config as config
 import color
 import json
 from .base import Context

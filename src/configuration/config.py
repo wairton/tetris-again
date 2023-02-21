@@ -18,11 +18,13 @@ SCREEN_RESOUTION = (470, 600)
 # game image settings
 GAME_PATH = os.getcwd()
 IMG_PATH = os.path.join(GAME_PATH, 'img')
+CONFIGURATION_PATH = os.path.join(GAME_PATH, 'configuration')
 IMG_LOGO = os.path.join(IMG_PATH, 'logo_.png')
 IMG_BUTTON = os.path.join(IMG_PATH, 'menu_.png')
 IMG_BUTTON_SEL = os.path.join(IMG_PATH, 'menu_selected_2.png')
-RECORD_FILE = os.path.join(GAME_PATH, 'records.json')
-OPTIONS_FILE = os.path.join(GAME_PATH, 'options.json')
+FONT_FILE = os.path.join(CONFIGURATION_PATH, 'Fixedsys Excelsior 3.01 Regular.ttf')
+RECORD_FILE = os.path.join(CONFIGURATION_PATH, 'records.json')
+OPTIONS_FILE = os.path.join(CONFIGURATION_PATH, 'options.json')
 # in game settings
 LINE_VALUE = (100, 300, 500, 800)
 # grid settings

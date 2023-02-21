@@ -4,7 +4,7 @@ import pygame
 import pygame.locals as pl
 
 import json
-import config
+import configuration.config as config
 from mechanics import GameScreen
 from .base import Context
 

@@ -1,6 +1,6 @@
 import time
 
-import config
+import configuration.config as config
 import color
 from images import image_loader
 from .base import Context

@@ -3,7 +3,7 @@ import sys
 import pygame
 
 from draw import Draw
-import config
+import configuration.config as config
 
 
 class Game:
