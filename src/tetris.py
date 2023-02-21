@@ -25,7 +25,7 @@ class Game:
             elif option == 'records':
                 ctx.RecordContext(self.draw).execute()
             elif option == 'options':
-                ctx.ConfigPlayerContext(self.draw).draw_space()
+                ctx.ConfigPlayerContext(self.draw).execute()
             else:
                 print(option, 'unknown')
 

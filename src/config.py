@@ -22,6 +22,7 @@ IMG_LOGO = os.path.join(IMG_PATH, 'logo_.png')
 IMG_BUTTON = os.path.join(IMG_PATH, 'menu_.png')
 IMG_BUTTON_SEL = os.path.join(IMG_PATH, 'menu_selected_2.png')
 RECORD_FILE = os.path.join(GAME_PATH, 'records.json')
+OPTIONS_FILE = os.path.join(GAME_PATH, 'options.json')
 # in game settings
 LINE_VALUE = (100, 300, 500, 800)
 # grid settings

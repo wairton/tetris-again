@@ -89,7 +89,7 @@ class Grid:
             for j, c in enumerate(line):
                 self.draw_block(
                     c, (ini_x + j * block_size_and_pad, ini_y + i * block_size_and_pad))
-    
+
     def draw_block(self, color, position):
         block = Block(color)
         block.draw(self.drawer, position)
@@ -102,7 +102,7 @@ class Grid:
 
     def _shape_to_positions(self, shape, base_position):
         x, y = base_position
-        shape_pos = list(zip([(l + y, c + x) for l in range(4) for c in range(4)], shape))
+        shape_pos = list(zip([(line + y, c + x) for line in range(4) for c in range(4)], shape))
         return [a[0] for a in [a for a in shape_pos if a[1] == 1]]
 
     def get_piece_positions(self, piece):
@@ -300,9 +300,6 @@ class Score:
         text = self.font.render("score: %s" % self.score, 1, color.WHITE2)
         self.drawer.blit(text, (x, y + 50))
 
-    def receive_score(self):
-        return self.score
-
 
 class GameScreen:
     class Action(enum.Enum):
@@ -311,6 +308,7 @@ class GameScreen:
         ROTATE = enum.auto()
         GROUND = enum.auto()
         STEP = enum.auto()
+        SCORE = enum.auto()
 
     def __init__(self, drawer, grid_position):
         self.grid = Grid(config.GRID_WIDTH, config.GRID_HEIGHT, drawer)
@@ -352,7 +350,7 @@ class GameScreen:
         collided, died = mapping[action]()
         self.grid.draw(self.grid_position)
         if died:
-            return True, self.score.receive_score()
+            return True, self.score.score
         if collided:
             lines = self.grid.check_complete_lines()
             if len(lines) > 0:
