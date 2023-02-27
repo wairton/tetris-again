@@ -23,7 +23,11 @@ class PlayContext(Context):
                     sys.exit()
                 if event.type == pl.KEYDOWN:
                     if event.key == pl.K_ESCAPE:
-                        return 'foo'
+                        died, score = game_screen.loop(GameScreen.Action.STEP)
+                        if score == None:
+                            return 0
+                        else:
+                            return score
                     elif event.key == pl.K_UP:
                         game_screen.loop(GameScreen.Action.ROTATE)
                     elif event.key == pl.K_DOWN:
