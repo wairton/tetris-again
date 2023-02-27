@@ -44,7 +44,7 @@ class PlayContext(Context):
                         if died:
                             return score
                 if event.type == pl.KEYUP:
-                    if event.key == pl.K_DOWN:
+                    if event.key == get_key(options['Down']):
                         mod = 8
             if i % mod == 0:
                 died, score = game_screen.loop(GameScreen.Action.STEP)

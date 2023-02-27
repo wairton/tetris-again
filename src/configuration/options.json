@@ -1,7 +1,1 @@
-{
-    "Ground": "space",
-    "Down": "down",
-    "Left": "left",
-    "Right": "right",
-    "Rotate": "up"
-}
+{"Rotate": "w", "Down": "s", "Left": "a", "Right": "d", "Ground": "space"}
