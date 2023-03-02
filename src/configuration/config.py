@@ -24,7 +24,7 @@ IMG_BUTTON = os.path.join(IMG_PATH, 'menu_.png')
 IMG_BUTTON_SEL = os.path.join(IMG_PATH, 'menu_selected_2.png')
 FONT_FILE = os.path.join(CONFIGURATION_PATH, 'Fixedsys Excelsior 3.01 Regular.ttf')
 RECORD_FILE = os.path.join(CONFIGURATION_PATH, 'records.json')
-OPTIONS_FILE = os.path.join(CONFIGURATION_PATH, 'options.json')
+OPTIONS_FILE = os.path.join(CONFIGURATION_PATH, 'control.json')
 # in game settings
 LINE_VALUE = (100, 300, 500, 800)
 # grid settings

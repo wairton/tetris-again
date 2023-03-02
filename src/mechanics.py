@@ -65,7 +65,8 @@ class Block:
         self.img_index = img_index
 
     def draw(self, drawer, position):
-        drawer.blit(resource.BLOCKS_IMG[self.img_index].surface, position)
+        drawer.blit(resource.BLOCKS_IMG[self.img_index].surface, position,
+                    (0, 0, 21, 21))
 
 
 class Grid:
@@ -88,7 +89,7 @@ class Grid:
         for i, line in enumerate(self.structure):
             for j, c in enumerate(line):
                 self.draw_block(
-                    c, (ini_x + j * block_size_and_pad, ini_y + i * block_size_and_pad))
+                    c, (ini_x + j * 22, ini_y + i * 22))
 
     def draw_block(self, color, position):
         block = Block(color)
