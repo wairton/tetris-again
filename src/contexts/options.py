@@ -28,51 +28,47 @@ class ConfigPlayerContext(Context):
         list_of_used_keys = ["return", "escape"]
         width_pos = (screen_w / 100) * 5
         # Drawing the options and their respective cubes
-        draw_dict = configuration.copy()
-        pygame.draw.line(
-            self.drawer._surface,
-            color.WHITE,
-            (screen_w / 2 - 10, 50),
-            (screen_w / 2 - 10, screen_h)
-        )
-        for set in range(int(len(configuration) / 5)):
+        for count, player in enumerate(configuration):
             height_pos = 50
-            width_pos = (screen_w / 100) * (5 + 50 * set)
+            width_pos = ((screen_w / 10) // len(configuration)) + (screen_w / 100) * ((100 / len(configuration)) * count)
             option_enumeration = 0
-            for count, options in enumerate(draw_dict):
+            pygame.draw.line(
+                self.drawer._surface,
+                color.WHITE,
+                ((screen_w / len(configuration) - 10) * count + 1, 50),
+                ((screen_w / len(configuration) - 10) * count + 1, screen_h)
+            )
+            list_of_options.append([])
+            for setting in configuration[player]:
 
                 option = Option(
                     height_pos,
                     width_pos,
-                    options,
-                    option_enumeration,
-                    configuration[options]
+                    setting,
+                    height_pos,
+                    configuration[player][setting]
                 )
 
                 option.set_surface()
+                pygame.display.get_surface().blit(
+                    pygame.image.load(config.ROTATE_BUTTON),
+                    (width_pos, height_pos)
+                )
 
                 option.set_text(color.WHITE)
 
-                list_of_options.append(option)
-                list_of_used_keys.append(configuration[options])
-                height_pos += 100
+                list_of_options[count].append(option)
+                list_of_used_keys.append(configuration[player][setting])
+                height_pos += (screen_h / 100) * (100 / len(configuration[player]) - 5)
                 option_enumeration += 1
-                if count == 4:
-                    break
-            confirm_font = font.render("Press Enter to confirm", 1, color.WHITE, color.BLACK)
-            self.drawer.blit(
-                confirm_font,
-                ((screen_w - confirm_font.get_width()) / 2, screen_h - 40)
-            )
-            remove_list = []
-            for key in draw_dict:
-                remove_list.append(key)
-            remove_list = remove_list[0:5:]
-            for d in remove_list:
-                draw_dict.pop(d)
-        self.execute(list_of_options, list_of_used_keys)
+        confirm_font = font.render("Press Enter to confirm", 1, color.WHITE, color.BLACK)
+        self.drawer.blit(
+            confirm_font,
+            ((screen_w - confirm_font.get_width()) / 2, screen_h - 40)
+        )
+        self.execute(list_of_options, list_of_used_keys, configuration)
 
-    def execute(self, options, keys_used):
+    def execute(self, players, keys_used, configuration):
 
         fpsClock = pygame.time.Clock()
         font = pygame.font.Font(config.FONT_FILE, 40)
@@ -82,15 +78,16 @@ class ConfigPlayerContext(Context):
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if setting_key is False:
-                        for option in options:
-                            # Checking which option the user Clicked
-                            if option.check_collision(pygame.mouse.get_pos()):
-                                setting_key = True
-                                new_key_option = option
-                                # Changing the color to yellow for better User Experience
-                                new_key_option.surface.fill(color.YELLOW)
-                                new_key_option.set_surface()
-                                new_key_option.set_text(color.YELLOW)
+                        for player in players:
+                            for option in player:
+                                # Checking which option the user Clicked
+                                if option.check_collision(pygame.mouse.get_pos()):
+                                    setting_key = True
+                                    new_key_option = option
+                                    # Changing the color to yellow for better User Experience
+                                    new_key_option.surface.fill(color.YELLOW)
+                                    new_key_option.set_surface()
+                                    new_key_option.set_text(color.YELLOW)
                     else:
                         eraser_box = pygame.Surface((screen_w, 50))
                         eraser_box.fill(color.BLACK)
@@ -115,9 +112,10 @@ class ConfigPlayerContext(Context):
                     if event.key == pygame.K_RETURN:
                         # Dumping the new options (or old if no changes are made) to JSON
                         dumpdict = {}
-
-                        for option in options:
-                            dumpdict[option.option] = option.key
+                        for count, player in enumerate(players):
+                            dumpdict["Player" + str(count + 1)] = {}
+                            for option in player:
+                                dumpdict["Player" + str(count + 1)][option.option] = option.key
                         json_dump = json.dumps(dumpdict)
 
                         with open(config.OPTIONS_FILE, "w") as file:
@@ -143,18 +141,19 @@ class ConfigPlayerContext(Context):
                             # Changing the color to white to represent set option.
                             new_key_option.surface.fill(color.WHITE)
                             new_key_option.set_surface()
-                            new_key_option.set_text()
+                            new_key_option.set_text(color.WHITE)
                             setting_key = False
                         else:
                             if pygame.key.name(event.key) not in RESERVED_KEYS:
-                                for option in options:
-                                    if option.key == pygame.key.name(event.key):
-                                        option.key = new_key_option.key
-                                        # Erasing the swapped key test
-                                        option.erase_text()
-                                        # Placing the new text
-                                        option.set_text(color.WHITE)
-                                        break
+                                for player in players:
+                                    for option in player:
+                                        if option.key == pygame.key.name(event.key):
+                                            option.key = new_key_option.key
+                                            # Erasing the swapped key test
+                                            option.erase_text()
+                                            # Placing the new text
+                                            option.set_text(color.WHITE)
+                                            break
                                 new_key_option.key = pygame.key.name(event.key)
                                 new_key_option.surface.fill(color.WHITE)
                                 # Erasing old text
@@ -189,12 +188,12 @@ class ConfigPlayerContext(Context):
 
 
 class Option():
-    def __init__(self, height, width, option, count, key):
+    def __init__(self, height, width, option, text_height, key):
         self.height = height
         self.width = width
         self.option = option
         self.key = key
-        self.count = count
+        self.text_height = text_height
         self.surface = pygame.Surface((50, 50))
         self.rect = self.surface.get_rect(topleft=(width, height))
         self.surface.fill(color.WHITE)
@@ -214,7 +213,7 @@ class Option():
         font = pygame.font.Font(config.FONT_FILE, 40)
         pygame.display.get_surface().blit(
             font.render(str(self.key), 1, text_color, color.BLACK),
-            (self.width + TEXT_INCREMENT, (self.count * 100) + 50)
+            (self.width + TEXT_INCREMENT, self.text_height)
         )
 
     def erase_text(self):
@@ -222,5 +221,5 @@ class Option():
         eraser_box.fill(color.BLACK)
         pygame.display.get_surface().blit(
             eraser_box,
-            (self.width + TEXT_INCREMENT, (self.count * 100) + 50)
+            (self.width + TEXT_INCREMENT, self.text_height)
         )
