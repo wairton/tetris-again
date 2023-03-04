@@ -14,7 +14,6 @@ piece_colors = [
 ]
 
 
-
 class Piece:
     def __init__(self, shape, color, position, initial_state):
         self._shape = shape
@@ -103,7 +102,7 @@ class Grid:
 
     def _shape_to_positions(self, shape, base_position):
         x, y = base_position
-        shape_pos = list(zip([(l + y, c + x) for l in range(4) for c in range(4)], shape))
+        shape_pos = list(zip([(line + y, c + x) for line in range(4) for c in range(4)], shape))
         return [a[0] for a in [a for a in shape_pos if a[1] == 1]]
 
     def get_piece_positions(self, piece):
@@ -175,8 +174,8 @@ class Grid:
             if next is None:
                 self.fill_piece_positions(blocks, piece.color)
                 self.pop_piece()
-                for l, c in blocks:
-                    if l <= 0:
+                for line in blocks:
+                    if line[0] <= 0:
                         return True, True
                 return True, False
             else:
@@ -258,7 +257,7 @@ class PiecePreview:
         ini_y += 2 * block_pad
         ini_x += 2 * block_pad
         for piece in pieces[:self.num_pieces]:
-            shape_pos = list(zip([(c, l) for l in range(4) for c in range(4)], piece.shape))
+            shape_pos = list(zip([(c, line) for line in range(4) for c in range(4)], piece.shape))
             sx, sy, ex, ey = piece.get_block_coords()
             piece_width = (ex - sx) * bsap + block_size
             ppos = ini_x + (preview_width - piece_width) / 2
@@ -301,6 +300,9 @@ class Score:
         text = self.font.render("score: %s" % self.score, 1, color.WHITE2)
         self.drawer.blit(text, (x, y + 50))
 
+    def receive_score(self):
+        return self.score
+
 
 class GameScreen:
     class Action(enum.Enum):
@@ -338,6 +340,7 @@ class GameScreen:
         return Piece(new_shape, new_color, (3, -4), initial_position)
 
     def loop(self, action: Action):
+
         mapping = {
             GameScreen.Action.LEFT: self.grid.left,
             GameScreen.Action.RIGHT: self.grid.right,
@@ -345,10 +348,11 @@ class GameScreen:
             GameScreen.Action.GROUND: self.grid.ground,
             GameScreen.Action.STEP: self.grid.step,
         }
+
         collided, died = mapping[action]()
         self.grid.draw(self.grid_position)
         if died:
-            return True
+            return True, self.score.receive_score()
         if collided:
             lines = self.grid.check_complete_lines()
             if len(lines) > 0:
@@ -357,4 +361,4 @@ class GameScreen:
             self.grid.add_piece(self.next_pieces.pop(0))
             self.next_pieces.append(self.generate_piece())
             self.preview.draw(self.next_pieces)
-        return False
+        return False, None

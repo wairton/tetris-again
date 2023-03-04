@@ -4,11 +4,10 @@ from enum import Enum
 import color
 
 
-
-
 class Backend(Enum):
     PYGAME = 1
     OTHER = 2
+
 
 BACKEND = Backend.PYGAME
 
@@ -22,7 +21,7 @@ IMG_PATH = os.path.join(GAME_PATH, 'img')
 IMG_LOGO = os.path.join(IMG_PATH, 'logo_.png')
 IMG_BUTTON = os.path.join(IMG_PATH, 'menu_.png')
 IMG_BUTTON_SEL = os.path.join(IMG_PATH, 'menu_selected_2.png')
-RECORD_FILE = os.path.join(GAME_PATH, 'records.conf')
+RECORD_FILE = os.path.join(GAME_PATH, 'records.json')
 # in game settings
 LINE_VALUE = (100, 300, 500, 800)
 # grid settings
@@ -35,3 +34,4 @@ GRID_PAD = 2
 # block settings
 BLOCK_SIZE = 25
 BLOCK_PAD = 1
+RECORD_SIZE = 10
