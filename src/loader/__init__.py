@@ -1,1 +1,1 @@
-from .fonts import load_font
+from .fonts import load_font, load_default_font  # noqa

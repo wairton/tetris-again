@@ -1,5 +1,3 @@
-import sys
-
 import pygame
 import pygame.locals as pl
 
@@ -7,22 +5,19 @@ import config
 import color
 import json
 
+
 from loader import load_font
 from .base import Context
+from highscore import Highscore
 
 
 class RecordContext(Context):
     def __init__(self, drawer):
         self.font = load_font(40)
-        super(RecordContext, self).__init__(drawer)
+        self.highscore = Highscore()
+        super().__init__(drawer)
 
-    def execute(self):
-        # Opening the JSON and setting the screen
-        try:
-            records = json.load(open(config.RECORD_FILE))
-        except Exception as e:
-            print("TODO =)", e)
-
+    def execute(self, new_highscore=None):
         self.drawer.fill(color.BEAUTIFUL_BLUE)
         screen_w, screen_h = config.SCREEN_RESOUTION
 
@@ -31,8 +26,8 @@ class RecordContext(Context):
         fpsClock = pygame.time.Clock()
 
         # Getting the highscore table and print it
-        for count, highscore in enumerate(records):
-            msg = "{}. {} {}".format(count + 1, highscore['name'], highscore['score'])
+        for count, highscore in enumerate(self.highscore.scores):
+            msg = "{}. {} {}".format(count + 1, highscore.name, highscore.score)
             text = font2.render(msg, 1, (20, 20, 20))
             text_x_pos = (screen_w - text.get_width()) / 2
             self.drawer.blit(
@@ -67,35 +62,27 @@ class RecordContext(Context):
     def draw_new_highscore(self, score):
         self.drawer.fill(color.BLACK)
         screen_w, screen_h = config.SCREEN_RESOUTION
-        font = pygame.font.Font('Fixedsys Excelsior 3.01 Regular.ttf', 40)
 
-        try:
-            records = json.load(open(config.RECORD_FILE))
-        except Exception as e:
-            print(e)
+        records = self.highscore.scores
+        # TODO no sure if this check is necessary...
         if len(records) >= config.RECORD_SIZE:
             records.pop()
 
-        records.append({'name': '___', 'score': score})
-        records.sort(reverse=True, key=self.sort_by_score)
+        records.append(Highscore.ScoreItem(name='___', score=score))
+        records = sorted(records, reverse=True, key=lambda s: s.score)
 
         title = 'New Highscore!'
         title_font = self.font.render(title, 1, color.WHITE)
         centered_text = (screen_w - title_font.get_width()) / 2
-        self.drawer.blit(
-            title_font, (centered_text, 0)
-        )
+        self.drawer.blit(title_font, (centered_text, 0))
 
         for count, highscore in enumerate(records):
-            msg = "{}. {} {}".format(count + 1, highscore['name'], str(highscore['score']).zfill(9))
+            msg = "{}. {} {}".format(count + 1, highscore.name, str(highscore.score).zfill(9))
             text = self.font.render(msg, 1, color.WHITE)
             text_x_pos = (screen_w - text.get_width()) / 2
             text_y_pos = (text.get_height() + 2) * count + 100
-            self.drawer.blit(
-                text,
-                (text_x_pos, text_y_pos)
-            )
-            if highscore['name'] == '___':
+            self.drawer.blit(text, (text_x_pos, text_y_pos))
+            if highscore.name == '___':
                 new_score_x_pos = (screen_w - text.get_width()) / 2
                 new_score_y_pos = (text.get_height() + 2) * count + 100
                 new_count = count + 1
@@ -134,10 +121,7 @@ class RecordContext(Context):
                         in_nick_msg = in_nick_msg.replace('_', str(event.unicode).upper(), 1)
                         msg = "{}. {} {}".format(new_count, in_nick_msg, str(score).zfill(9))
                         text = self.font.render(msg, 1, color.WHITE)
-                        self.drawer.blit(
-                            text,
-                            (new_x, new_y)
-                        )
+                        self.drawer.blit(text, (new_x, new_y))
                         if len(highscore_nick) == 3:
                             finish_text = 'Press Enter to Continue'
                             finish_font = self.font.render(finish_text, 1, color.WHITE)
@@ -148,20 +132,11 @@ class RecordContext(Context):
                             )
             if text_color == color.YELLOW:
                 text = self.font.render(msg, 1, text_color)
-                self.drawer.blit(
-                    text,
-                    (new_x, new_y)
-                )
+                self.drawer.blit(text, (new_x, new_y))
                 text_color = color.WHITE
             else:
                 text = self.font.render(msg, 1, text_color)
-                self.drawer.blit(
-                    text,
-                    (new_x, new_y)
-                )
+                self.drawer.blit(text, (new_x, new_y))
                 text_color = color.YELLOW
             FpsClock.tick(2)
             self.drawer.display()
-
-    def sort_by_score(self, score):
-        return score['score']

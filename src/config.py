@@ -18,10 +18,13 @@ SCREEN_RESOUTION = (470, 600)
 # game image settings
 GAME_PATH = os.getcwd()
 IMG_PATH = os.path.join(GAME_PATH, 'img')
+DATA_PATH = os.path.join(GAME_PATH, 'data')
+RES_PATH = os.path.join(GAME_PATH, 'res')
+FONTS_PATH = os.path.join(RES_PATH, 'fonts')
 IMG_LOGO = os.path.join(IMG_PATH, 'logo_.png')
 IMG_BUTTON = os.path.join(IMG_PATH, 'menu_.png')
 IMG_BUTTON_SEL = os.path.join(IMG_PATH, 'menu_selected_2.png')
-RECORD_FILE = os.path.join(GAME_PATH, 'records.json')
+RECORD_FILE = os.path.join(DATA_PATH, 'records.json')
 # in game settings
 LINE_VALUE = (100, 300, 500, 800)
 # grid settings

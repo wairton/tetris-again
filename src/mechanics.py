@@ -5,6 +5,7 @@ import config
 import color
 import resource
 import shapes
+import loader
 
 # TODO: normalize initialization parameters order
 
@@ -283,7 +284,7 @@ class Score:
         self.lines = 0
         self.show_score = show_score
         self.show_lines = show_lines
-        self.font = resource.GAME_FONT
+        self.font = loader.load_font(size=30)
         self.drawer = drawer
 
     def update(self, num_lines=0):
