@@ -2,7 +2,7 @@ import os
 
 import pygame
 
-from configuration.config import IMG_PATH
+from config import IMG_PATH
 from images import image_loader
 
 # menu
@@ -27,5 +27,3 @@ BLOCKS_PATH = [
 ]
 
 BLOCKS_IMG = [image_loader(block) for block in BLOCKS_PATH]
-
-GAME_FONT = pygame.font.Font(None, 30)  # TODO: remove this hard coded value!

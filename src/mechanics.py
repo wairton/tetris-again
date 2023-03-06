@@ -1,10 +1,11 @@
 import random
 import enum
 
-import configuration.config as config
+import config
 import color
 import resource
 import shapes
+import loader
 
 # TODO: normalize initialization parameters order
 
@@ -65,8 +66,7 @@ class Block:
         self.img_index = img_index
 
     def draw(self, drawer, position):
-        drawer.blit(resource.BLOCKS_IMG[self.img_index].surface, position,
-                    (0, 0, 21, 21))
+        drawer.blit(resource.BLOCKS_IMG[self.img_index].surface, position)
 
 
 class Grid:
@@ -89,7 +89,7 @@ class Grid:
         for i, line in enumerate(self.structure):
             for j, c in enumerate(line):
                 self.draw_block(
-                    c, (ini_x + j * 22, ini_y + i * 22))
+                    c, (ini_x + j * block_size_and_pad, ini_y + i * block_size_and_pad))
 
     def draw_block(self, color, position):
         block = Block(color)
@@ -284,7 +284,7 @@ class Score:
         self.lines = 0
         self.show_score = show_score
         self.show_lines = show_lines
-        self.font = resource.GAME_FONT
+        self.font = loader.load_font(size=30)
         self.drawer = drawer
 
     def update(self, num_lines=0):
@@ -301,6 +301,9 @@ class Score:
         text = self.font.render("score: %s" % self.score, 1, color.WHITE2)
         self.drawer.blit(text, (x, y + 50))
 
+    def receive_score(self):
+        return self.score
+
 
 class GameScreen:
     class Action(enum.Enum):
@@ -309,7 +312,6 @@ class GameScreen:
         ROTATE = enum.auto()
         GROUND = enum.auto()
         STEP = enum.auto()
-        SCORE = enum.auto()
 
     def __init__(self, drawer, grid_position):
         self.grid = Grid(config.GRID_WIDTH, config.GRID_HEIGHT, drawer)
@@ -351,7 +353,7 @@ class GameScreen:
         collided, died = mapping[action]()
         self.grid.draw(self.grid_position)
         if died:
-            return True, self.score.score
+            return True, self.score.receive_score()
         if collided:
             lines = self.grid.check_complete_lines()
             if len(lines) > 0:

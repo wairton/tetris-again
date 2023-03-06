@@ -3,8 +3,6 @@ import sys
 import pygame
 import pygame.locals as pl
 
-import json
-import configuration.config as config
 from mechanics import GameScreen
 from .base import Context
 
@@ -17,11 +15,6 @@ class PlayContext(Context):
         FPS = 32  # frames per second setting
         died = False
         fps_clock = pygame.time.Clock()
-        try:
-            options = json.load(open(config.OPTIONS_FILE))
-        except Exception as e:
-            print(e)
-        get_key = pygame.key.key_code
         while True:
             i += 1
             for event in pygame.event.get():
@@ -30,21 +23,25 @@ class PlayContext(Context):
                     sys.exit()
                 if event.type == pl.KEYDOWN:
                     if event.key == pl.K_ESCAPE:
-                        return game_screen.loop(GameScreen.Action.SCORE)
-                    elif event.key == get_key(options['Rotate']):
+                        died, score = game_screen.loop(GameScreen.Action.STEP)
+                        if score == None:
+                            return 0
+                        else:
+                            return score
+                    elif event.key == pl.K_UP:
                         game_screen.loop(GameScreen.Action.ROTATE)
-                    elif event.key == get_key(options['Down']):
+                    elif event.key == pl.K_DOWN:
                         mod = 2
-                    elif event.key == get_key(options['Left']):
+                    elif event.key == pl.K_LEFT:
                         game_screen.loop(GameScreen.Action.LEFT)
-                    elif event.key == get_key(options['Right']):
+                    elif event.key == pl.K_RIGHT:
                         game_screen.loop(GameScreen.Action.RIGHT)
-                    elif event.key == get_key(options['Ground']):
+                    elif event.key == pl.K_SPACE:
                         died, score = game_screen.loop(GameScreen.Action.GROUND)
                         if died:
                             return score
                 if event.type == pl.KEYUP:
-                    if event.key == get_key(options['Down']):
+                    if event.key == pl.K_DOWN:
                         mod = 8
             if i % mod == 0:
                 died, score = game_screen.loop(GameScreen.Action.STEP)

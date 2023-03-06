@@ -1,7 +1,7 @@
 import pygame
 import pygame.locals as pl
 
-import configuration.config as config
+import config
 from .base import Context
 import color
 

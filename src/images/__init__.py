@@ -1,4 +1,4 @@
-import configuration.config as config
+import config
 
 from .interfaces import Image
 
