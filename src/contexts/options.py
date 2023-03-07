@@ -8,6 +8,12 @@ from .base import Context
 
 TEXT_INCREMENT = 60
 RESERVED_KEYS = ["esc", "enter"]
+BUTTON_IMAGES = [config.ROTATE_BUTTON,
+                 config.DOWN_BUTTON,
+                 config.LEFT_BUTTON,
+                 config.RIGHT_BUTTON,
+                 config.GROUND_BUTTON,
+                 config.HOLD_BUTTON]
 screen_w, screen_h = config.SCREEN_RESOUTION
 
 
@@ -38,7 +44,8 @@ class ConfigPlayerContext(Context):
                 ((screen_w / len(configuration) - 10) * count + 1, screen_h)
             )
             list_of_options.append([])
-            for setting in configuration[player]:
+            for img_count, setting in enumerate(configuration[player]):
+
                 option = Option(
                     height_pos,
                     width_pos,
@@ -50,7 +57,7 @@ class ConfigPlayerContext(Context):
 
                 option.set_surface()
                 pygame.display.get_surface().blit(
-                    pygame.image.load(config.ROTATE_BUTTON),
+                    pygame.image.load(BUTTON_IMAGES[img_count]),
                     (width_pos, height_pos)
                 )
 
