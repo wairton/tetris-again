@@ -4,6 +4,7 @@ import pygame
 
 from draw import Draw
 import configuration.config as config
+from highscore import highscore
 
 
 class Game:
@@ -15,15 +16,26 @@ class Game:
     def loop(self):
         import contexts as ctx
         ctx.IntroContext(self.draw).execute()
+        next_option = None
+        context_data = {}
         while True:
-            option = ctx.MainMenuContext(self.draw).execute()
+            if next_option:
+                option = next_option
+                next_option = None
+            else:
+                option = ctx.MainMenuContext(self.draw).execute()
+
             if option == 'exit':
                 sys.exit()
             elif option == 'play':
                 score = ctx.PlayContext(self.draw).execute()
-                ctx.RecordContext(self.draw).check_if_highscore(score)
+                if highscore.is_highscore(score):
+                    next_option = 'records'
+                    context_data = {
+                        'new_highscore': score
+                    }
             elif option == 'records':
-                ctx.RecordContext(self.draw).execute()
+                ctx.RecordContext(self.draw).execute(**context_data)
             elif option == 'options':
                 ctx.ConfigPlayerContext(self.draw).draw_options()
             else:
