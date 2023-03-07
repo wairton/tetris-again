@@ -22,6 +22,7 @@ class PlayContext(Context):
         except Exception as e:
             print(e)
         get_key = pygame.key.key_code
+        player1_options = options["Player1"]
         while True:
             i += 1
             for event in pygame.event.get():
@@ -31,20 +32,20 @@ class PlayContext(Context):
                 if event.type == pl.KEYDOWN:
                     if event.key == pl.K_ESCAPE:
                         return game_screen.loop(GameScreen.Action.SCORE)
-                    elif event.key == get_key(options['Rotate']):
+                    elif event.key == get_key(player1_options['Rotate']):
                         game_screen.loop(GameScreen.Action.ROTATE)
-                    elif event.key == get_key(options['Down']):
+                    elif event.key == get_key(player1_options['Down']):
                         mod = 2
-                    elif event.key == get_key(options['Left']):
+                    elif event.key == get_key(player1_options['Left']):
                         game_screen.loop(GameScreen.Action.LEFT)
-                    elif event.key == get_key(options['Right']):
+                    elif event.key == get_key(player1_options['Right']):
                         game_screen.loop(GameScreen.Action.RIGHT)
-                    elif event.key == get_key(options['Ground']):
+                    elif event.key == get_key(player1_options['Ground']):
                         died, score = game_screen.loop(GameScreen.Action.GROUND)
                         if died:
                             return score
                 if event.type == pl.KEYUP:
-                    if event.key == get_key(options['Down']):
+                    if event.key == get_key(player1_options['Down']):
                         mod = 8
             if i % mod == 0:
                 died, score = game_screen.loop(GameScreen.Action.STEP)

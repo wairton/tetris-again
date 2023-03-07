@@ -89,7 +89,7 @@ class Grid:
         for i, line in enumerate(self.structure):
             for j, c in enumerate(line):
                 self.draw_block(
-                    c, (ini_x + j * 22, ini_y + i * 22))
+                    c, (ini_x + j * block_size_and_pad, ini_y + i * block_size_and_pad))
 
     def draw_block(self, color, position):
         block = Block(color)
