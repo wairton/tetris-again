@@ -5,6 +5,7 @@ import pygame
 from draw import Draw
 import config
 from highscore import highscore
+from highscore import highscore
 
 
 class Game:
@@ -36,6 +37,7 @@ class Game:
                     }
             elif option == 'records':
                 ctx.RecordContext(self.draw).execute(**context_data)
+                context_data = {}
             elif option == 'options':
                 # TODO
                 pass

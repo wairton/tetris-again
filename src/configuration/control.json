@@ -1,0 +1,1 @@
+{"Player1": {"Rotate": "up", "Down": "down", "Left": "left", "Right": "right", "Ground": "space", "Hold": "h"}, "Player2": {"Rotate": "[8]", "Down": "[5]", "Left": "[4]", "Right": "[6]", "Ground": "[9]", "Hold": "[7]"}}

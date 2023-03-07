@@ -1,7 +1,7 @@
 import json
 import os
 
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 import config
 
 
@@ -31,11 +31,11 @@ class Highscore:
     def scores(self):
         if self._data is None:
             self._data = self.load()
-        return sorted(self._data[:], reverse=True, key=lambda s:s.score)
+        return sorted(self._data[:], reverse=True, key=lambda s: s.score)
 
     def ensure_is_loaded(self):
         if self._data is None:
-            self.load()
+            self._data = self.load()
 
     def load(self):
         if os.path.exists(config.RECORD_FILE):
@@ -43,6 +43,12 @@ class Highscore:
         else:
             data = []
         return [self.ScoreItem(**item) for item in data]
+
+    def dump(self):
+        dump = json.dumps(self._data, default=asdict)
+        with open(config.RECORD_FILE, "w") as f:
+            f.write(dump)
+        return "Worked!"
 
 
 highscore = Highscore()
