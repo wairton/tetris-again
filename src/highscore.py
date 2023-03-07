@@ -1,7 +1,7 @@
 import json
 import os
 
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 import config
 
 
@@ -45,14 +45,10 @@ class Highscore:
         return [self.ScoreItem(**item) for item in data]
 
     def dump(self):
-        dump = json.dumps(self._data, default=self.object_to_dict)
+        dump = json.dumps(self._data, default=asdict)
         with open(config.RECORD_FILE, "w") as f:
             f.write(dump)
         return "Worked!"
-
-    def object_to_dict(self, data):
-        if isinstance(data, self.ScoreItem):
-            return ({"name": data.name, "score": data.score})
 
 
 highscore = Highscore()
