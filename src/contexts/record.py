@@ -3,7 +3,6 @@ import pygame.locals as pl
 
 import config
 import color
-import json
 import sys
 
 from loader import load_font
@@ -47,20 +46,9 @@ class RecordContext(Context):
             self.drawer.display()
 
     def check_if_highscore(self, score):
-        try:
-            records = json.load(open(config.RECORD_FILE))
-        except Exception as e:
-            print(e)
-
-        if len(records) < config.RECORD_SIZE:
+        if Highscore.is_highscore(score=score):
             self.draw_new_highscore(score)
-            return 'No matter'
-
-        for highscore in records:
-            if score > highscore['score']:
-                self.draw_new_highscore(score)
-                break
-        return 'It just works'
+        return True
 
     def draw_new_highscore(self, score):
         self.drawer.fill(color.BLACK)
