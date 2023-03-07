@@ -66,7 +66,7 @@ class Block:
 
     def draw(self, drawer, position):
         drawer.blit(resource.BLOCKS_IMG[self.img_index].surface, position,
-                    (0, 0, 21, 21))
+                    (0, 0, config.BLOCK_SIZE, config.BLOCK_SIZE))
 
 
 class Grid:
