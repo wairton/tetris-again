@@ -36,6 +36,8 @@ class PlayContext(Context):
                         game_screen.loop(GameScreen.Action.LEFT)
                     elif event.key == pl.K_RIGHT:
                         game_screen.loop(GameScreen.Action.RIGHT)
+                    elif event.key == pl.K_h:
+                        game_screen.loop(GameScreen.Action.HOLD)
                     elif event.key == pl.K_SPACE:
                         died, score = game_screen.loop(GameScreen.Action.GROUND)
                         if died:
