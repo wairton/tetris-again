@@ -76,6 +76,7 @@ class Grid:
         self.ncolumns = ncolumns
         self.nlines = nlines
         self.drawer = draw
+        self.locked = False
 
     def filled(self, color):
         for i, line in enumerate(self.structure):
@@ -177,19 +178,19 @@ class Grid:
                 self.pop_piece()
                 for line in blocks:
                     if line[0] <= 0:
-                        return True, True
-                return True, False
+                        return True, True, False
+                return True, False, False
             else:
                 self.fill_piece_positions(next, piece.color)
                 px, py = self.active_pieces[i].position
                 self.active_pieces[i].position = px, py + 1
-                return False, False
+                return False, False, False
 
     def ground(self):
-        collided, died = self.step()
+        collided, died, hold = self.step()
         while not collided:
-            collided, died = self.step()
-        return collided, died
+            collided, died, hold = self.step()
+        return collided, died, hold
 
     def rotate(self):
         for i, piece in enumerate(self.active_pieces):
@@ -201,7 +202,7 @@ class Grid:
             else:
                 self.fill_piece_positions(next, piece.color)
                 self.active_pieces[i].rotate()
-            return False, False
+            return False, False, False
 
     def left(self):
         for i, piece in enumerate(self.active_pieces):
@@ -214,7 +215,7 @@ class Grid:
                 self.fill_piece_positions(next, piece.color)
                 px, py = self.active_pieces[i].position
                 self.active_pieces[i].position = px - 1, py
-            return False, False
+            return False, False, False
 
     def right(self):
         for i, piece in enumerate(self.active_pieces):
@@ -227,7 +228,7 @@ class Grid:
                 self.fill_piece_positions(next, piece.color)
                 px, py = self.active_pieces[i].position
                 self.active_pieces[i].position = px + 1, py
-            return False, False
+            return False, False, False
 
     def remove_lines(self, lines):
         for i in lines:
@@ -240,6 +241,15 @@ class Grid:
             if 0 not in line:
                 lines.append(i)
         return lines
+
+    def hold(self):
+        for piece in self.active_pieces:
+            if self.locked is False:
+                block = self.get_piece_positions(piece)
+                self.fill_piece_positions(block, 0)
+                return False, False, True
+            else:
+                return False, False, False
 
 
 class PiecePreview:
@@ -312,11 +322,13 @@ class GameScreen:
         ROTATE = enum.auto()
         GROUND = enum.auto()
         STEP = enum.auto()
+        HOLD = enum.auto()
 
     def __init__(self, drawer, grid_position):
         self.grid = Grid(config.GRID_WIDTH, config.GRID_HEIGHT, drawer)
         self.preview = PiecePreview((350, 100), 3, drawer)
         drawer.fill(color.WHITE)
+        print("Another one")
         self.grid.draw(grid_position)
         self.grid_position = grid_position
         # we humans don't like real randomness...
@@ -324,6 +336,7 @@ class GameScreen:
         random.shuffle(self.color_choices)
         drawer.display()
         self.drawer = drawer
+        self.hold_piece = None
         # TODO: remove the hard-coded value in the next line!
         self.next_pieces = [self.generate_piece() for _ in range(6)]
         self.grid.add_piece(self.next_pieces.pop(0))
@@ -348,18 +361,40 @@ class GameScreen:
             GameScreen.Action.ROTATE: self.grid.rotate,
             GameScreen.Action.GROUND: self.grid.ground,
             GameScreen.Action.STEP: self.grid.step,
+            GameScreen.Action.HOLD: self.grid.hold
         }
 
-        collided, died = mapping[action]()
+        collided, died, hold = mapping[action]()
         self.grid.draw(self.grid_position)
         if died:
             return True, self.score.receive_score()
         if collided:
             lines = self.grid.check_complete_lines()
+            self.grid.locked = False
             if len(lines) > 0:
                 self.grid.remove_lines(lines)
                 self.score.update(len(lines))
             self.grid.add_piece(self.next_pieces.pop(0))
             self.next_pieces.append(self.generate_piece())
             self.preview.draw(self.next_pieces)
+        if hold:
+            if self.hold_piece is None:
+                self.hold_piece = self.grid.active_pieces[0]
+                self.grid.pop_piece()
+                self.grid.add_piece(self.next_pieces.pop(0))
+                self.next_pieces.append(self.generate_piece())
+                self.preview.draw(self.next_pieces)
+                self.grid.locked = True
+            elif self.grid.locked is False:
+                self.hold_piece.position = self.grid.active_pieces[0].position
+                px, py = self.hold_piece.position
+                grid_pos = self.grid.get_piece_positions(self.hold_piece)
+                if self.grid.try_piece_left(grid_pos) is None:
+                    self.hold_piece.position = px + 1, py
+                if self.grid.try_piece_right(grid_pos) is None:
+                    self.hold_piece.position = px - 1, py
+                self.grid.add_piece(self.hold_piece)
+                self.hold_piece = self.grid.active_pieces[0]
+                self.grid.pop_piece()
+                self.grid.locked = True
         return False, None
