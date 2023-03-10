@@ -252,6 +252,58 @@ class Grid:
                 return False, False, False
 
 
+class HoldPiece:
+    def __init__(self, position, drawer, grid):
+        self.position = position
+        self.drawer = drawer
+        self.hold_piece = None
+        self.grid = grid
+
+    def draw(self):
+        ini_x, ini_y = self.position
+        block_size, block_pad = config.BLOCK_SIZE, config.BLOCK_PAD
+        bsap = block_size + block_pad
+        self.drawer.rect(color.BLACK, (ini_x, ini_y, bsap * 4, bsap * 4))
+        if self.hold_piece is not None:
+            shape_pos = list(zip([(c, line) for line in range(4) for c in range(4)], self.hold_piece.shape))
+            sx, sy, ex, ey = self.hold_piece.get_block_coords()
+            piece_width = (ex - sx) * bsap + block_size
+            ppos = ini_x + (bsap * 4 - piece_width) / 2
+            for pos, block in shape_pos:
+                if not block:
+                    continue
+                x, y = pos
+                if block:
+                    piece_color = self.hold_piece.color
+                self.draw_block(piece_color, (ppos + (x - sx) * block_size, ini_y + y * block_size))
+            ini_y += 4 * block_size + 2 * block_pad
+
+    def first_hold(self, preview, gamescreen):
+        self.hold_piece = self.grid.active_pieces[0]
+        self.grid.pop_piece()
+        self.grid.add_piece(gamescreen.next_pieces.pop(0))
+        gamescreen.next_pieces.append(gamescreen.generate_piece())
+        preview.draw(gamescreen.next_pieces)
+        self.grid.locked = True
+
+    def hold(self):
+        self.hold_piece.position = self.grid.active_pieces[0].position
+        px, py = self.hold_piece.position
+        grid_pos = self.grid.get_piece_positions(self.hold_piece)
+        if self.grid.try_piece_left(grid_pos) is None:
+            self.hold_piece.position = px + 1, py
+        if self.grid.try_piece_right(grid_pos) is None:
+            self.hold_piece.position = px - 1, py
+        self.grid.add_piece(self.hold_piece)
+        self.hold_piece = self.grid.active_pieces[0]
+        self.grid.pop_piece()
+        self.grid.locked = True
+
+    def draw_block(self, color, position):
+        block = Block(color)
+        block.draw(self.drawer, position)
+
+
 class PiecePreview:
     def __init__(self, position, num_pieces, drawer):
         self.position = position
@@ -261,7 +313,7 @@ class PiecePreview:
     def draw(self, pieces):
         ini_x, ini_y = self.position
         block_size, block_pad = config.BLOCK_SIZE, config.BLOCK_PAD
-        bsap = block_size + config.BLOCK_PAD
+        bsap = block_size + block_pad
         preview_width = 4 * bsap
         preview_heigh = 12 * block_size + 8 * block_pad
         self.drawer.rect(color.BLACK, (ini_x, ini_y, preview_width, preview_heigh))
@@ -326,10 +378,12 @@ class GameScreen:
 
     def __init__(self, drawer, grid_position):
         self.grid = Grid(config.GRID_WIDTH, config.GRID_HEIGHT, drawer)
-        self.preview = PiecePreview((350, 100), 3, drawer)
+        self.preview = PiecePreview((350, 120), 3, drawer)
+        self.hold = HoldPiece((350, 5), drawer, self.grid)
         drawer.fill(color.WHITE)
         print("Another one")
         self.grid.draw(grid_position)
+        self.hold.draw()
         self.grid_position = grid_position
         # we humans don't like real randomness...
         self.color_choices = list(range(1, len(piece_colors)))
@@ -378,23 +432,9 @@ class GameScreen:
             self.next_pieces.append(self.generate_piece())
             self.preview.draw(self.next_pieces)
         if hold:
-            if self.hold_piece is None:
-                self.hold_piece = self.grid.active_pieces[0]
-                self.grid.pop_piece()
-                self.grid.add_piece(self.next_pieces.pop(0))
-                self.next_pieces.append(self.generate_piece())
-                self.preview.draw(self.next_pieces)
-                self.grid.locked = True
+            if self.hold.hold_piece is None:
+                self.hold.first_hold(self.preview, self)
             elif self.grid.locked is False:
-                self.hold_piece.position = self.grid.active_pieces[0].position
-                px, py = self.hold_piece.position
-                grid_pos = self.grid.get_piece_positions(self.hold_piece)
-                if self.grid.try_piece_left(grid_pos) is None:
-                    self.hold_piece.position = px + 1, py
-                if self.grid.try_piece_right(grid_pos) is None:
-                    self.hold_piece.position = px - 1, py
-                self.grid.add_piece(self.hold_piece)
-                self.hold_piece = self.grid.active_pieces[0]
-                self.grid.pop_piece()
-                self.grid.locked = True
+                self.hold.hold()
+            self.hold.draw()
         return False, None
