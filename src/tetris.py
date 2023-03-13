@@ -3,8 +3,7 @@ import sys
 import pygame
 
 from draw import Draw
-import config
-from highscore import highscore
+import configuration.config as config
 from highscore import highscore
 
 

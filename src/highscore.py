@@ -2,7 +2,7 @@ import json
 import os
 
 from dataclasses import dataclass, asdict
-import config
+import configuration.config as config
 
 
 class Highscore:
@@ -45,10 +45,8 @@ class Highscore:
         return [self.ScoreItem(**item) for item in data]
 
     def dump(self):
-        dump = json.dumps(self._data, default=asdict)
-        with open(config.RECORD_FILE, "w") as f:
-            f.write(dump)
-        return "Worked!"
+        datadict = asdict(self._data)
+        json.dump(datadict, open(config.RECORD_FILE))
 
 
 highscore = Highscore()

@@ -1,9 +1,9 @@
+import sys
+import json
 import pygame
 
-import sys
 import configuration.config as config
 import color
-import json
 from .base import Context
 
 TEXT_INCREMENT = 60
@@ -19,7 +19,7 @@ class ConfigPlayerContext(Context):
         self.drawer.fill(color.BLACK)
         try:
             configuration = json.load(open(config.OPTIONS_FILE))
-        except Exception as e:
+        except FileNotFoundError as e:
             print(e)
 
         font = pygame.font.Font(config.FONT_FILE, 40)
@@ -40,13 +40,13 @@ class ConfigPlayerContext(Context):
             )
             list_of_options.append([])
             for setting in configuration[player]:
-
                 option = Option(
                     height_pos,
                     width_pos,
                     setting,
                     height_pos,
-                    configuration[player][setting]
+                    configuration[player][setting],
+                    self.drawer
                 )
 
                 option.set_surface()
@@ -77,14 +77,14 @@ class ConfigPlayerContext(Context):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    # After clicking in a setting box; It views if it is already setting another key.
+                    # if not, it views which player and option the user is changing
                     if setting_key is False:
                         for player in players:
                             for option in player:
-                                # Checking which option the user Clicked
                                 if option.check_collision(pygame.mouse.get_pos()):
                                     setting_key = True
                                     new_key_option = option
-                                    # Changing the color to yellow for better User Experience
                                     new_key_option.surface.fill(color.YELLOW)
                                     new_key_option.set_surface()
                                     new_key_option.set_text(color.YELLOW)
@@ -124,13 +124,10 @@ class ConfigPlayerContext(Context):
 
                     if setting_key is True:
                         if pygame.key.name(event.key) not in keys_used:
-                            # Removing the existing key to the used keys list
-                            # and adding the new one
                             keys_used.remove(new_key_option.key)
                             keys_used.append(pygame.key.name(event.key))
                             new_key_option.key = pygame.key.name(event.key)
 
-                            # Erasing the existing text
                             new_key_option.erase_text()
                             eraser_box = pygame.Surface((screen_w, 50))
                             eraser_box.fill(color.BLACK)
@@ -138,7 +135,6 @@ class ConfigPlayerContext(Context):
                                 eraser_box,
                                 (0, 0)
                             )
-                            # Changing the color to white to represent set option.
                             new_key_option.surface.fill(color.WHITE)
                             new_key_option.set_surface()
                             new_key_option.set_text(color.WHITE)
@@ -149,24 +145,16 @@ class ConfigPlayerContext(Context):
                                     for option in player:
                                         if option.key == pygame.key.name(event.key):
                                             option.key = new_key_option.key
-                                            # Erasing the swapped key test
                                             option.erase_text()
-                                            # Placing the new text
                                             option.set_text(color.WHITE)
                                             break
                                 new_key_option.key = pygame.key.name(event.key)
                                 new_key_option.surface.fill(color.WHITE)
-                                # Erasing old text
                                 new_key_option.erase_text()
-                                # Changing the surface color
                                 new_key_option.set_surface()
-                                # inserting new text
                                 new_key_option.set_text(color.WHITE)
-
                                 setting_key = False
-
                             else:
-                                # In case that the key is reserved, show error.
                                 eraser_box = pygame.Surface((screen_w, 50))
                                 eraser_box.fill(color.BLACK)
                                 self.drawer.blit(
@@ -187,12 +175,13 @@ class ConfigPlayerContext(Context):
             fpsClock.tick(32)
 
 
-class Option():
-    def __init__(self, height, width, option, text_height, key):
+class Option:
+    def __init__(self, height, width, option, text_height, key, drawer):
         self.height = height
         self.width = width
         self.option = option
         self.key = key
+        self.drawer = drawer
         self.text_height = text_height
         self.surface = pygame.Surface((50, 50))
         self.rect = self.surface.get_rect(topleft=(width, height))
@@ -204,14 +193,14 @@ class Option():
         return False
 
     def set_surface(self):
-        pygame.display.get_surface().blit(
+        self.drawer.blit(
             self.surface,
             (self.width, self.height)
         )
 
     def set_text(self, text_color):
         font = pygame.font.Font(config.FONT_FILE, 40)
-        pygame.display.get_surface().blit(
+        self.drawer.blit(
             font.render(str(self.key), 1, text_color, color.BLACK),
             (self.width + TEXT_INCREMENT, self.text_height)
         )
@@ -219,7 +208,7 @@ class Option():
     def erase_text(self):
         eraser_box = pygame.Surface(((screen_w / 100) * 30, 50))
         eraser_box.fill(color.BLACK)
-        pygame.display.get_surface().blit(
+        self.drawer.blit(
             eraser_box,
             (self.width + TEXT_INCREMENT, self.text_height)
         )

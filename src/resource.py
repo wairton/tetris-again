@@ -1,8 +1,7 @@
 import os
 
-import pygame
 
-from config import IMG_PATH
+from configuration.config import IMG_PATH
 from images import image_loader
 
 # menu
