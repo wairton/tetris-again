@@ -38,9 +38,7 @@ class Game:
                 ctx.RecordContext(self.draw).execute(**context_data)
                 context_data = {}
             elif option == 'options':
-                # TODO
-                pass
-                # ctx.ConfigPlayerContext(self.draw).draw_space()
+                ctx.ConfigPlayerContext(self.draw).draw_options()
             else:
                 print(option, 'unknown')
 
