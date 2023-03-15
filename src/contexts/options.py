@@ -32,8 +32,7 @@ class ConfigPlayerContext(Context):
             height_pos = 50
             width_pos = ((screen_w / 10) // len(configuration)) + (screen_w / 100) * ((100 / len(configuration)) * count)
             option_enumeration = 0
-            pygame.draw.line(
-                self.drawer._surface,
+            self.drawer.line(
                 color.WHITE,
                 ((screen_w / len(configuration) - 10) * count + 1, 50),
                 ((screen_w / len(configuration) - 10) * count + 1, screen_h)
@@ -69,8 +68,7 @@ class ConfigPlayerContext(Context):
         self.execute(list_of_options, list_of_used_keys, configuration)
 
     def execute(self, players, keys_used, configuration):
-
-        fpsClock = pygame.time.Clock()
+        fps_clock = pygame.time.Clock()
         font = pygame.font.Font(config.FONT_FILE, 40)
         setting_key = False
 
@@ -172,7 +170,7 @@ class ConfigPlayerContext(Context):
                                 )
 
             pygame.display.flip()
-            fpsClock.tick(32)
+            fps_clock.tick(32)
 
 
 class Option:
@@ -188,9 +186,7 @@ class Option:
         self.surface.fill(color.WHITE)
 
     def check_collision(self, pos):
-        if self.rect.collidepoint(pos):
-            return True
-        return False
+        return self.rect.collidepoint(pos)
 
     def set_surface(self):
         self.drawer.blit(

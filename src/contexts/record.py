@@ -45,11 +45,6 @@ class RecordContext(Context):
             fpsClock.tick(FPS)
             self.drawer.display()
 
-    def check_if_highscore(self, score):
-        if Highscore.is_highscore(score=score):
-            self.draw_new_highscore(score)
-        return True
-
     def draw_new_highscore(self, score):
         self.drawer.fill(color.BLACK)
         screen_w, screen_h = config.SCREEN_RESOUTION
