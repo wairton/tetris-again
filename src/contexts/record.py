@@ -94,7 +94,7 @@ class RecordContext(Context):
                     if len(highscore_nick) == 3 and event.key == pygame.K_RETURN:
 
                         self.highscore.add(name=highscore_nick, score=score)
-                        self.highscore.dump()
+                        self.highscore.save()
                         return ""
 
                     if event.unicode.isalpha() and len(highscore_nick) < 3:
