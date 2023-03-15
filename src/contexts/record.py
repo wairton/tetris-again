@@ -1,10 +1,9 @@
 import pygame
 import pygame.locals as pl
 
-import config
+import configuration.config as config
 import color
-import json
-
+import sys
 
 from loader import load_font
 from .base import Context
@@ -18,6 +17,9 @@ class RecordContext(Context):
         super().__init__(drawer)
 
     def execute(self, new_highscore=None):
+        if new_highscore is not None:
+            self.draw_new_highscore(new_highscore)
+            return ""
         self.drawer.fill(color.BEAUTIFUL_BLUE)
         screen_w, screen_h = config.SCREEN_RESOUTION
 
@@ -43,30 +45,11 @@ class RecordContext(Context):
             fpsClock.tick(FPS)
             self.drawer.display()
 
-    def check_if_highscore(self, score):
-        try:
-            records = json.load(open(config.RECORD_FILE))
-        except Exception as e:
-            print(e)
-
-        if len(records) < config.RECORD_SIZE:
-            self.draw_new_highscore(score)
-            return 'No matter'
-
-        for highscore in records:
-            if score > highscore['score']:
-                self.draw_new_highscore(score)
-                break
-        return 'It just works'
-
     def draw_new_highscore(self, score):
         self.drawer.fill(color.BLACK)
         screen_w, screen_h = config.SCREEN_RESOUTION
 
         records = self.highscore.scores
-        # TODO no sure if this check is necessary...
-        if len(records) >= config.RECORD_SIZE:
-            records.pop()
 
         records.append(Highscore.ScoreItem(name='___', score=score))
         records = sorted(records, reverse=True, key=lambda s: s.score)
@@ -95,11 +78,6 @@ class RecordContext(Context):
         screen_w, screen_h = config.SCREEN_RESOUTION
         msg = "{}. {} {}".format(new_count, in_nick_msg, str(score).zfill(9))
 
-        try:
-            records = json.load(open(config.RECORD_FILE))
-        except Exception as e:
-            print(e)
-
         text_color = color.WHITE
 
         while True:
@@ -109,13 +87,11 @@ class RecordContext(Context):
                         pygame.quit()
                         sys.exit()
                     if len(highscore_nick) == 3 and event.key == pygame.K_RETURN:
-                        records.append({'name': highscore_nick, 'score': score})
-                        records.sort(reverse=True, key=self.sort_by_score)
 
-                        new_highscore = json.dumps(records, sort_keys=True)
-                        with open('records.json', 'w') as f:
-                            f.write(new_highscore)
-                        return 'Goodbye!'
+                        self.highscore.add(name=highscore_nick, score=score)
+                        self.highscore.save()
+                        return ""
+
                     if event.unicode.isalpha() and len(highscore_nick) < 3:
                         highscore_nick += str(event.unicode).upper()
                         in_nick_msg = in_nick_msg.replace('_', str(event.unicode).upper(), 1)

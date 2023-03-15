@@ -1,4 +1,4 @@
-import config
+import configuration.config as config
 
 import pygame
 
