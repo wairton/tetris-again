@@ -52,14 +52,11 @@ class ConfigPlayerContext(Context):
                     setting,
                     height_pos,
                     configuration[player][setting],
-                    self.drawer
+                    self.drawer,
+                    img_count
                 )
 
                 option.set_surface()
-                pygame.display.get_surface().blit(
-                    pygame.image.load(BUTTON_IMAGES[img_count]),
-                    (width_pos, height_pos)
-                )
 
                 option.set_text(color.WHITE)
 
@@ -181,12 +178,13 @@ class ConfigPlayerContext(Context):
 
 
 class Option:
-    def __init__(self, height, width, option, text_height, key, drawer):
+    def __init__(self, height, width, option, text_height, key, drawer, count):
         self.height = height
         self.width = width
         self.option = option
         self.key = key
         self.drawer = drawer
+        self.count = count
         self.text_height = text_height
         self.surface = pygame.Surface((50, 50))
         self.rect = self.surface.get_rect(topleft=(width, height))
@@ -198,6 +196,10 @@ class Option:
     def set_surface(self):
         self.drawer.blit(
             self.surface,
+            (self.width, self.height)
+        )
+        self.drawer.blit(
+            pygame.image.load(BUTTON_IMAGES[self.count]),
             (self.width, self.height)
         )
 
