@@ -25,7 +25,8 @@ class PlayContext(Context):
             print(e)
         get_key = pygame.key.key_code
         player1_options = options["Player1"]
-        pygame.time.set_timer(STEP_REPEAT, SPF * 15)
+        diff = 15
+        pygame.time.set_timer(STEP_REPEAT, SPF * diff)
         while True:
             for event in pygame.event.get():
                 if event.type == pl.QUIT:
@@ -55,7 +56,7 @@ class PlayContext(Context):
                             return score
                 if event.type == pl.KEYUP:
                     if event.key == get_key(player1_options['Down']):
-                        pygame.time.set_timer(STEP_REPEAT, SPF * 15)
+                        pygame.time.set_timer(STEP_REPEAT, SPF * diff)
                     elif event.key == get_key(player1_options['Left']):
                         pygame.time.set_timer(LEFT_REPEAT, 0)
                     elif event.key == get_key(player1_options['Right']):
