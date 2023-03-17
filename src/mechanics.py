@@ -115,8 +115,11 @@ class Grid:
                 continue
             self.structure[line][column] = value
 
-    def try_piece_rotate(self, piece):
-        rotated_shape = piece.next_rotate()
+    def try_piece_rotate(self, piece, clockwise=True):
+        if clockwise:
+            rotated_shape = piece.next_rotate()
+        else:
+            rotated_shape = piece.next_rotate(clockwise=False)
         rotated_positions = self._shape_to_positions(rotated_shape, piece.position)
         if self.verify_collision(rotated_positions):
             return None
@@ -201,6 +204,18 @@ class Grid:
             else:
                 self.fill_piece_positions(next, piece.color)
                 self.active_pieces[i].rotate()
+            return False, False
+
+    def anti_rotate(self):
+        for i, piece in enumerate(self.active_pieces):
+            blocks = self.get_piece_positions(piece)
+            self.fill_piece_positions(blocks, 0)
+            next = self.try_piece_rotate(piece, clockwise=False)
+            if next is None:
+                self.fill_piece_positions(blocks, piece.color)
+            else:
+                self.fill_piece_positions(next, piece.color)
+                self.active_pieces[i].rotate(clockwise=False)
             return False, False
 
     def left(self):
@@ -312,6 +327,7 @@ class GameScreen:
         ROTATE = enum.auto()
         GROUND = enum.auto()
         STEP = enum.auto()
+        ANTI_ROTATE = enum.auto()
 
     def __init__(self, drawer, grid_position):
         self.grid = Grid(config.GRID_WIDTH, config.GRID_HEIGHT, drawer)
@@ -332,11 +348,8 @@ class GameScreen:
         self.score.update()
 
     def generate_piece(self):
-        if len(self.color_choices) == 0:
-            self.color_choices = list(range(1, len(piece_colors)))
-            random.shuffle(self.color_choices)
         new_shape = random.choice(shapes.ALL_SHAPES)
-        new_color = self.color_choices.pop()
+        new_color = shapes.ALL_SHAPES.index(new_shape) + 1
         initial_position = random.randint(0, len(new_shape) - 1)
         return Piece(new_shape, new_color, (3, -4), initial_position)
 
@@ -348,6 +361,7 @@ class GameScreen:
             GameScreen.Action.ROTATE: self.grid.rotate,
             GameScreen.Action.GROUND: self.grid.ground,
             GameScreen.Action.STEP: self.grid.step,
+            GameScreen.Action.ANTI_ROTATE: self.grid.anti_rotate
         }
 
         collided, died = mapping[action]()

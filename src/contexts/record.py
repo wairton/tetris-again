@@ -20,20 +20,25 @@ class RecordContext(Context):
         if new_highscore is not None:
             self.draw_new_highscore(new_highscore)
             return ""
-        self.drawer.fill(color.BEAUTIFUL_BLUE)
+        self.drawer.fill(color.BLACK)
         screen_w, screen_h = config.SCREEN_RESOUTION
 
-        FPS = 32  # frames per second setting
-        font2 = pygame.font.Font(None, 40)
+        FPS = 60  # frames per second setting
+        font2 = pygame.font.Font(config.FONT_FILE, 40)
         fpsClock = pygame.time.Clock()
+
+        title = 'Highscores'
+        title_font = font2.render(title, 1, color.WHITE)
+        centered_text = (screen_w - title_font.get_width()) / 2
+        self.drawer.blit(title_font, (centered_text, 0))
 
         # Getting the highscore table and print it
         for count, highscore in enumerate(self.highscore.scores):
             msg = "{}. {} {}".format(count + 1, highscore.name, highscore.score)
-            text = font2.render(msg, 1, (20, 20, 20))
+            text = font2.render(msg, 1, color.WHITE)
             text_x_pos = (screen_w - text.get_width()) / 2
             self.drawer.blit(
-                text, (text_x_pos, (text.get_height() + 2) * count + 50))
+                text, (text_x_pos, (text.get_height() + 2) * count + 70))
 
         while True:
             for event in pygame.event.get():
@@ -77,6 +82,8 @@ class RecordContext(Context):
         FpsClock = pygame.time.Clock()
         screen_w, screen_h = config.SCREEN_RESOUTION
         msg = "{}. {} {}".format(new_count, in_nick_msg, str(score).zfill(9))
+        FLASH_TEXT = pygame.USEREVENT
+        pygame.time.set_timer(FLASH_TEXT, 500)
 
         text_color = color.WHITE
 
@@ -94,6 +101,12 @@ class RecordContext(Context):
 
                     if event.unicode.isalpha() and len(highscore_nick) < 3:
                         highscore_nick += str(event.unicode).upper()
+                        eraser_box = pygame.Surface(((screen_w / 100) * 30, 50))
+                        eraser_box.fill(color.BLACK)
+                        self.drawer.blit(
+                            eraser_box,
+                            (new_x, new_y)
+                        )
                         in_nick_msg = in_nick_msg.replace('_', str(event.unicode).upper(), 1)
                         msg = "{}. {} {}".format(new_count, in_nick_msg, str(score).zfill(9))
                         text = self.font.render(msg, 1, color.WHITE)
@@ -106,13 +119,15 @@ class RecordContext(Context):
                                 finish_font,
                                 (centered_text, 50)
                             )
-            if text_color == color.YELLOW:
-                text = self.font.render(msg, 1, text_color)
-                self.drawer.blit(text, (new_x, new_y))
-                text_color = color.WHITE
-            else:
-                text = self.font.render(msg, 1, text_color)
-                self.drawer.blit(text, (new_x, new_y))
-                text_color = color.YELLOW
-            FpsClock.tick(2)
+
+                if event.type == FLASH_TEXT:
+                    if text_color == color.YELLOW:
+                        text = self.font.render(msg, 1, text_color)
+                        self.drawer.blit(text, (new_x, new_y))
+                        text_color = color.WHITE
+                    else:
+                        text = self.font.render(msg, 1, text_color)
+                        self.drawer.blit(text, (new_x, new_y))
+                        text_color = color.YELLOW
+            FpsClock.tick(60)
             self.drawer.display()

@@ -9,6 +9,7 @@ from .base import Context
 TEXT_INCREMENT = 60
 RESERVED_KEYS = ["esc", "enter"]
 BUTTON_IMAGES = [config.ROTATE_BUTTON,
+                 config.ANTI_ROTATE_BUTTON,
                  config.DOWN_BUTTON,
                  config.LEFT_BUTTON,
                  config.RIGHT_BUTTON,
