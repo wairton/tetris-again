@@ -194,7 +194,7 @@ class Grid:
             collided, died = self.step()
         return collided, died
 
-    def rotate(self):
+    def rotate_right(self):
         for i, piece in enumerate(self.active_pieces):
             blocks = self.get_piece_positions(piece)
             self.fill_piece_positions(blocks, 0)
@@ -206,7 +206,7 @@ class Grid:
                 self.active_pieces[i].rotate()
             return False, False
 
-    def anti_rotate(self):
+    def rotate_left(self):
         for i, piece in enumerate(self.active_pieces):
             blocks = self.get_piece_positions(piece)
             self.fill_piece_positions(blocks, 0)
@@ -324,10 +324,10 @@ class GameScreen:
     class Action(enum.Enum):
         LEFT = enum.auto()
         RIGHT = enum.auto()
-        ROTATE = enum.auto()
+        ROTATE_RIGHT = enum.auto()
         GROUND = enum.auto()
         STEP = enum.auto()
-        ANTI_ROTATE = enum.auto()
+        ROTATE_LEFT = enum.auto()
 
     def __init__(self, drawer, grid_position):
         self.grid = Grid(config.GRID_WIDTH, config.GRID_HEIGHT, drawer)
@@ -358,10 +358,10 @@ class GameScreen:
         mapping = {
             GameScreen.Action.LEFT: self.grid.left,
             GameScreen.Action.RIGHT: self.grid.right,
-            GameScreen.Action.ROTATE: self.grid.rotate,
+            GameScreen.Action.ROTATE_RIGHT: self.grid.rotate_right,
             GameScreen.Action.GROUND: self.grid.ground,
             GameScreen.Action.STEP: self.grid.step,
-            GameScreen.Action.ANTI_ROTATE: self.grid.anti_rotate
+            GameScreen.Action.ROTATE_LEFT: self.grid.rotate_left
         }
 
         collided, died = mapping[action]()

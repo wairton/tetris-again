@@ -1,1 +1,1 @@
-{"Player1": {"Rotate": "up","Anti-Rotate": "p", "Down": "down", "Left": "left", "Right": "right", "Ground": "space", "Hold": "h"}, "Player2": {"Rotate": "[8]","Anti-Rotate": "[7]", "Down": "[5]", "Left": "[4]", "Right": "[6]", "Ground": "[9]", "Hold": "[7]"}}
+{"Player1": {"Rotate-right": "up","Rotate-left": "p", "Down": "down", "Left": "left", "Right": "right", "Ground": "space", "Hold": "h"}, "Player2": {"Rotate-right": "[8]","Rotate-left": "[7]", "Down": "[5]", "Left": "[4]", "Right": "[6]", "Ground": "[9]", "Hold": "[7]"}}

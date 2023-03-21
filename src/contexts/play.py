@@ -38,10 +38,10 @@ class PlayContext(Context):
                         if score is None:
                             return 0
                         return score
-                    elif event.key == get_key(player1_options['Rotate']):
-                        game_screen.loop(GameScreen.Action.ROTATE)
-                    elif event.key == get_key(player1_options['Anti-Rotate']):
-                        game_screen.loop(GameScreen.Action.ANTI_ROTATE)
+                    elif event.key == get_key(player1_options['Rotate-right']):
+                        game_screen.loop(GameScreen.Action.ROTATE_RIGHT)
+                    elif event.key == get_key(player1_options['Rotate-left']):
+                        game_screen.loop(GameScreen.Action.ROTATE_LEFT)
                     elif event.key == get_key(player1_options['Down']):
                         pygame.time.set_timer(STEP_REPEAT, int(SPF * 3.75))
                     elif event.key == get_key(player1_options['Left']):
