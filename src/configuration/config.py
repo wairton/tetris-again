@@ -34,6 +34,7 @@ RIGHT_BUTTON = os.path.join(IMG_PATH, "Right.png")
 FONT_FILE = os.path.join(FONTS_PATH, 'Fixedsys Excelsior 3.01 Regular.ttf')
 DATA_PATH = os.path.join(GAME_PATH, "data")
 RECORD_FILE = os.path.join(DATA_PATH, 'records.json')
+DATACLASS_PATH = os.path.join(DATA_PATH, 'dataclasses')
 OPTIONS_FILE = os.path.join(CONFIGURATION_PATH, 'control.json')
 # in game settings
 LINE_VALUE = (100, 300, 500, 800)

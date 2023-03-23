@@ -7,7 +7,7 @@ import sys
 
 from loader import load_font
 from .base import Context
-from highscore import Highscore
+from data.dataclasses.highscore import Highscore
 
 
 class RecordContext(Context):

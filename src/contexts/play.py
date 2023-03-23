@@ -35,9 +35,7 @@ class PlayContext(Context):
                 if event.type == pl.KEYDOWN:
                     if event.key == pl.K_ESCAPE:
                         died, score = game_screen.loop(GameScreen.Action.STEP)
-                        if score is None:
-                            return 0
-                        return score
+                        return score or 0
                     elif event.key == get_key(player1_options['Rotate-right']):
                         game_screen.loop(GameScreen.Action.ROTATE_RIGHT)
                     elif event.key == get_key(player1_options['Rotate-left']):

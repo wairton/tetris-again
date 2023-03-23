@@ -4,7 +4,7 @@ import pygame
 
 from draw import Draw
 import configuration.config as config
-from highscore import highscore
+from data.dataclasses.highscore import highscore
 
 
 class Game:
