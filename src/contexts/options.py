@@ -6,6 +6,7 @@ import configuration.config as config
 import color
 from .base import Context
 from data.dataclasses.controller import Controller
+from dataclasses import asdict
 
 TEXT_INCREMENT = 60
 RESERVED_KEYS = ["esc", "enter"]
@@ -43,14 +44,14 @@ class ConfigPlayerContext(Context):
                 ((screen_w / len(configuration) - 10) * count + 1, screen_h)
             )
             list_of_options.append([])
-            for img_count, value in enumerate(configuration[player].__dict__.items()):
+            set_of_options = asdict(configuration[player])
+            for img_count, input in enumerate(set_of_options):
 
-                atr, key = value
                 option = Option(
                     height_pos,
                     width_pos,
-                    atr,
-                    key,
+                    input,
+                    set_of_options[input],
                     height_pos,
                     self.drawer,
                     self.controller,
