@@ -20,8 +20,9 @@ class Highscore:
         self.ensure_is_loaded()
         if len(self._data) < self.MAX_LENGTH and score > 0:
             return True
-        else:
+        elif score > 0:
             return score > min(self._data, key=lambda k: k.score).score
+        return
 
     def add(self, *, name='___', score=0):
         self.ensure_is_loaded()
