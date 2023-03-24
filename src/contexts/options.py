@@ -1,5 +1,4 @@
 import sys
-import json
 import pygame
 
 import configuration.config as config
@@ -10,13 +9,15 @@ from dataclasses import asdict
 
 TEXT_INCREMENT = 60
 RESERVED_KEYS = ["esc", "enter"]
-BUTTON_IMAGES = [config.ROTATE_BUTTON,
-                 config.ANTI_ROTATE_BUTTON,
-                 config.DOWN_BUTTON,
-                 config.LEFT_BUTTON,
-                 config.RIGHT_BUTTON,
-                 config.GROUND_BUTTON,
-                 config.HOLD_BUTTON]
+BUTTON_IMAGES = [
+    config.ROTATE_BUTTON,
+    config.ANTI_ROTATE_BUTTON,
+    config.DOWN_BUTTON,
+    config.LEFT_BUTTON,
+    config.RIGHT_BUTTON,
+    config.GROUND_BUTTON,
+    config.HOLD_BUTTON
+]
 screen_w, screen_h = config.SCREEN_RESOUTION
 
 

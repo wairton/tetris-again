@@ -5,7 +5,6 @@ class Image(ABC):
     def __init__(self, path):
         self._image = self.load(path)
 
-
     @property
     @abstractmethod
     def surface(self):
