@@ -15,7 +15,7 @@ class Game:
 
     def loop(self):
         import contexts as ctx
-        ctx.IntroContext(self.draw).execute()
+        # ctx.IntroContext(self.draw).execute()
         next_option = None
         context_data = {}
         while True:
