@@ -5,10 +5,13 @@ import pygame
 import configuration.config as config
 import color
 from .base import Context
+from data.dataclasses.controller import Controller
+from dataclasses import asdict
 
 TEXT_INCREMENT = 60
 RESERVED_KEYS = ["esc", "enter"]
 BUTTON_IMAGES = [config.ROTATE_BUTTON,
+                 config.ANTI_ROTATE_BUTTON,
                  config.DOWN_BUTTON,
                  config.LEFT_BUTTON,
                  config.RIGHT_BUTTON,
@@ -20,18 +23,15 @@ screen_w, screen_h = config.SCREEN_RESOUTION
 class ConfigPlayerContext(Context):
     def __init__(self, drawer):
         super(ConfigPlayerContext, self).__init__(drawer)
+        self.controller = Controller()
 
     def draw_options(self):
         self.drawer.fill(color.BLACK)
-        try:
-            configuration = json.load(open(config.OPTIONS_FILE))
-        except FileNotFoundError as e:
-            print(e)
+        configuration = self.controller.load()
 
         font = pygame.font.Font(config.FONT_FILE, 40)
         # List used to track which options to set and which keys are being used
         list_of_options = []
-        list_of_used_keys = ["return", "escape"]
         width_pos = (screen_w / 100) * 5
         # Drawing the options and their respective cubes
         for count, player in enumerate(configuration):
@@ -44,15 +44,17 @@ class ConfigPlayerContext(Context):
                 ((screen_w / len(configuration) - 10) * count + 1, screen_h)
             )
             list_of_options.append([])
-            for img_count, setting in enumerate(configuration[player]):
+            set_of_options = asdict(configuration[player])
+            for img_count, input in enumerate(set_of_options):
 
                 option = Option(
                     height_pos,
                     width_pos,
-                    setting,
+                    input,
+                    set_of_options[input],
                     height_pos,
-                    configuration[player][setting],
                     self.drawer,
+                    self.controller,
                     img_count
                 )
 
@@ -61,17 +63,16 @@ class ConfigPlayerContext(Context):
                 option.set_text(color.WHITE)
 
                 list_of_options[count].append(option)
-                list_of_used_keys.append(configuration[player][setting])
-                height_pos += (screen_h / 100) * (100 / len(configuration[player]) - 5)
+                height_pos += (screen_h / 100) * (100 / 10)
                 option_enumeration += 1
         confirm_font = font.render("Press Enter to confirm", 1, color.WHITE, color.BLACK)
         self.drawer.blit(
             confirm_font,
             ((screen_w - confirm_font.get_width()) / 2, screen_h - 40)
         )
-        self.execute(list_of_options, list_of_used_keys, configuration)
+        self.execute(list_of_options)
 
-    def execute(self, players, keys_used, configuration):
+    def execute(self, players):
         fps_clock = pygame.time.Clock()
         font = pygame.font.Font(config.FONT_FILE, 40)
         setting_key = False
@@ -112,23 +113,12 @@ class ConfigPlayerContext(Context):
                         sys.exit()
 
                     if event.key == pygame.K_RETURN:
-                        # Dumping the new options (or old if no changes are made) to JSON
-                        dumpdict = {}
-                        for count, player in enumerate(players):
-                            dumpdict["Player" + str(count + 1)] = {}
-                            for option in player:
-                                dumpdict["Player" + str(count + 1)][option.option] = option.key
-                        json_dump = json.dumps(dumpdict)
-
-                        with open(config.OPTIONS_FILE, "w") as file:
-                            file.write(json_dump)
-                        return "Back to the Menu"
+                        self.controller.save()
+                        return
 
                     if setting_key is True:
-                        if pygame.key.name(event.key) not in keys_used:
-                            keys_used.remove(new_key_option.key)
-                            keys_used.append(pygame.key.name(event.key))
-                            new_key_option.key = pygame.key.name(event.key)
+                        if not self.controller.is_key_used(pygame.key.name(event.key)):
+                            new_key_option.change_key(pygame.key.name(event.key))
 
                             new_key_option.erase_text()
                             eraser_box = pygame.Surface((screen_w, 50))
@@ -146,11 +136,11 @@ class ConfigPlayerContext(Context):
                                 for player in players:
                                     for option in player:
                                         if option.key == pygame.key.name(event.key):
-                                            option.key = new_key_option.key
+                                            option.change_key(new_key_option.key)
                                             option.erase_text()
                                             option.set_text(color.WHITE)
                                             break
-                                new_key_option.key = pygame.key.name(event.key)
+                                new_key_option.change_key(pygame.key.name(event.key))
                                 new_key_option.surface.fill(color.WHITE)
                                 new_key_option.erase_text()
                                 new_key_option.set_surface()
@@ -174,17 +164,18 @@ class ConfigPlayerContext(Context):
                                 )
 
             pygame.display.flip()
-            fps_clock.tick(32)
+            fps_clock.tick(60)
 
 
 class Option:
-    def __init__(self, height, width, option, text_height, key, drawer, count):
+    def __init__(self, height, width, atr, key, text_height, drawer, controller, count):
         self.height = height
         self.width = width
-        self.option = option
+        self.atr = atr
         self.key = key
         self.drawer = drawer
         self.count = count
+        self.controller = controller
         self.text_height = text_height
         self.surface = pygame.Surface((50, 50))
         self.rect = self.surface.get_rect(topleft=(width, height))
@@ -217,3 +208,7 @@ class Option:
             eraser_box,
             (self.width + TEXT_INCREMENT, self.text_height)
         )
+
+    def change_key(self, new_key):
+        self.controller.key_change(self.atr, self.key, new_key)
+        self.key = new_key

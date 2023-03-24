@@ -22,6 +22,8 @@ class MainMenuContext(Context):
             for event in pygame.event.get():
                 if event.type != pygame.KEYDOWN:
                     continue
+                if event.type == pl.QUIT:
+                    pygame.quit()
                 if event.key in [pl.K_DOWN, pl.K_RIGHT]:
                     self.selected_option += 1
                     self.selected_option %= len(self.options)
@@ -39,8 +41,10 @@ class MainMenuContext(Context):
         x_pad = (screen_w - button_w) / 2
         y_pad = screen_h - (button_h + 10) * len(self.options)
         option_size = button_h + 5
-        self.drawer.fill(color.BEAUTIFUL_BLUE)
-        font = pygame.font.Font(None, 50)
+        self.drawer.fill(color.BLACK)
+        font = pygame.font.Font(config.FONT_FILE, 50)
+        self.draw_title("Tetris", 0, screen_w)
+        self.draw_title("Again", 70, screen_w)
         for i, option in enumerate(self.options):
             y_pos = y_pad + option_size * i
             text = font.render(option, 1, color.DARK_GRAY)
@@ -52,3 +56,9 @@ class MainMenuContext(Context):
             text_y_pos = (button_h - text.get_height()) / 2 + y_pos
             self.drawer.blit(text, (text_x_pos, text_y_pos))
         self.drawer.display()
+
+    def draw_title(self, msg, y_pos, screen_w):
+        title_font = pygame.font.Font(config.FONT_FILE, 80)
+        title_render = title_font.render(msg, 1, color.WHITE)
+        centered_text = (screen_w - title_render.get_width()) / 2
+        self.drawer.blit(title_render, (centered_text, y_pos))

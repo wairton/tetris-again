@@ -12,10 +12,12 @@ from .base import Context
 class PlayContext(Context):
 
     def execute(self):
+        STEP_REPEAT = pygame.USEREVENT
+        LEFT_REPEAT = pygame.USEREVENT + 1
+        RIGHT_REPEAT = pygame.USEREVENT + 2
         game_screen = GameScreen(self.drawer, (10, 60))
-        i, mod = 0, 8
-        FPS = 32  # frames per second setting
-        died = False
+        FPS = 60  # frames per second setting
+        SPF = 1000 // FPS
         fps_clock = pygame.time.Clock()
         try:
             options = json.load(open(config.OPTIONS_FILE))
@@ -23,8 +25,9 @@ class PlayContext(Context):
             print(e)
         get_key = pygame.key.key_code
         player1_options = options["Player1"]
+        diff = 15
+        pygame.time.set_timer(STEP_REPEAT, SPF * diff)
         while True:
-            i += 1
             for event in pygame.event.get():
                 if event.type == pl.QUIT:
                     pygame.quit()
@@ -32,15 +35,16 @@ class PlayContext(Context):
                 if event.type == pl.KEYDOWN:
                     if event.key == pl.K_ESCAPE:
                         died, score = game_screen.loop(GameScreen.Action.STEP)
-                        if score is None:
-                            return 0
-                        return score
-                    elif event.key == get_key(player1_options['Rotate']):
-                        game_screen.loop(GameScreen.Action.ROTATE)
+                        return score or 0
+                    elif event.key == get_key(player1_options['Rotate-right']):
+                        game_screen.loop(GameScreen.Action.ROTATE_RIGHT)
+                    elif event.key == get_key(player1_options['Rotate-left']):
+                        game_screen.loop(GameScreen.Action.ROTATE_LEFT)
                     elif event.key == get_key(player1_options['Down']):
-                        mod = 2
+                        pygame.time.set_timer(STEP_REPEAT, int(SPF * 3.75))
                     elif event.key == get_key(player1_options['Left']):
                         game_screen.loop(GameScreen.Action.LEFT)
+                        pygame.time.set_timer(LEFT_REPEAT, 100)
                     elif event.key == get_key(player1_options['Right']):
                         game_screen.loop(GameScreen.Action.RIGHT)
                     elif event.key == pl.K_h:
@@ -51,11 +55,18 @@ class PlayContext(Context):
                             return score
                 if event.type == pl.KEYUP:
                     if event.key == get_key(player1_options['Down']):
-                        mod = 8
-            if i % mod == 0:
-                died, score = game_screen.loop(GameScreen.Action.STEP)
-                i = 0
+                        pygame.time.set_timer(STEP_REPEAT, SPF * diff)
+                    elif event.key == get_key(player1_options['Left']):
+                        pygame.time.set_timer(LEFT_REPEAT, 0)
+                    elif event.key == get_key(player1_options['Right']):
+                        pygame.time.set_timer(RIGHT_REPEAT, 0)
+                if event.type == LEFT_REPEAT:
+                    game_screen.loop(GameScreen.Action.LEFT)
+                if event.type == RIGHT_REPEAT:
+                    game_screen.loop(GameScreen.Action.RIGHT)
+                if event.type == STEP_REPEAT:
+                    died, score = game_screen.loop(GameScreen.Action.STEP)
+                    if died:
+                        return score
             pygame.display.update()
-            if died:
-                return score
             fps_clock.tick(FPS)

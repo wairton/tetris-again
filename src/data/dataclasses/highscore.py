@@ -30,8 +30,7 @@ class Highscore:
 
     @property
     def scores(self):
-        if self._data is None:
-            self._data = self.load()
+        self.ensure_is_loaded()
         return sorted(self._data[:], reverse=True, key=lambda s: s.score)
 
     def ensure_is_loaded(self):
